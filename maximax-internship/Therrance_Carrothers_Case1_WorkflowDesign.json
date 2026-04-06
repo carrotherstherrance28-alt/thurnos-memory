@@ -1,0 +1,326 @@
+{
+  "name": "Sales Proposal & Contract Automation",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "fillout-proposal", "responseMode": "onReceived", "authentication": "headerAuth", "options": { "rawBody": false } },
+      "id": "webhookTrigger", "name": "Fillout Form Submission", "type": "n8n-nodes-base.webhook", "typeVersion": 2.1, "position": [0, 304],
+      "notes": "TRIGGER: Receives POST from Fillout form webhook\nTool: n8n Webhook\nSecurity: Header auth enabled, raw body disabled\nEstimated run time: 0s (trigger)\nPossible failure mode: Fillout webhook URL misconfigured, n8n instance offline"
+    },
+    {
+      "parameters": {
+        "jsCode": "// DATA TRANSFORMATION: Clean, normalize, validate form submission\nconst raw = $input.first().json;\nconst body = raw.body || raw;\n\nconst titleCase = (str) => {\n  if (!str) return '';\n  return str.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');\n};\n\nconst clientName = titleCase(body.clientName || body.name || '');\nconst clientEmail = (body.email || '').trim().toLowerCase();\nconst companyName = (body.companyName || body.company || '').trim();\nconst companyWebsite = (body.companyWebsite || body.website || '').trim().toLowerCase();\nconst projectReqs = (body.requirements || body.projectDetails || '').trim();\nconst budgetRange = (body.budget || body.budgetRange || '').trim();\nconst phone = (body.phone || '').replace(/[^0-9+\\-() ]/g, '').trim();\n\nconst submittedAt = new Date().toISOString();\nconst displayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });\n\nconst emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;\nconst emailValid = emailRegex.test(clientEmail);\nconst nameValid = clientName.length > 0;\n\nreturn [{\n  json: {\n    ClientName: clientName, ClientEmail: clientEmail, CompanyName: companyName,\n    CompanyWebsite: companyWebsite, ProjectRequirements: projectReqs, BudgetRange: budgetRange,\n    Phone: phone, SubmittedAt: submittedAt, DisplayDate: displayDate,\n    Status: 'New Lead', _emailValid: emailValid, _nameValid: nameValid\n  }\n}];"
+      },
+      "id": "transformClean", "name": "Transform & Clean Data", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [224, 304],
+      "notes": "STEP 1: Data transformation + validation\nTool: n8n Code (JavaScript)\nData transformation: ClientName title-case, ClientEmail lowercase+trim, Phone strip non-numeric, Date reformatted to ISO + display format\nData validation: Email regex check (_emailValid), Name not empty (_nameValid)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "version": 2, "leftValue": "", "caseSensitive": false, "typeValidation": "strict" },
+          "combinator": "and",
+          "conditions": [
+            { "id": "cond-email", "operator": { "type": "boolean", "operation": "true", "singleValue": true }, "leftValue": "={{ $json._emailValid }}", "rightValue": "" },
+            { "id": "cond-name", "operator": { "type": "boolean", "operation": "true", "singleValue": true }, "leftValue": "={{ $json._nameValid }}", "rightValue": "" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "validateLead", "name": "Valid Lead Data?", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [448, 304],
+      "notes": "CONDITIONAL LOGIC (IF/ELSE):\nIF _emailValid AND _nameValid > TRUE > continue\nIF either fails > FALSE > Log validation failure"
+    },
+    {
+      "parameters": {
+        "operation": "append", "documentId": { "__rl": true, "mode": "url", "value": "" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Proposals" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": { "ClientName": "={{ $json.ClientName }}", "ClientEmail": "={{ $json.ClientEmail }}", "CompanyName": "={{ $json.CompanyName }}", "CompanyWebsite": "={{ $json.CompanyWebsite }}", "ProjectRequirements": "={{ $json.ProjectRequirements }}", "BudgetRange": "={{ $json.BudgetRange }}", "Phone": "={{ $json.Phone }}", "SubmittedAt": "={{ $json.SubmittedAt }}", "Status": "={{ $json.Status }}" },
+          "schema": [
+            { "id": "ClientName", "type": "string", "display": true, "required": false, "displayName": "ClientName" },
+            { "id": "ClientEmail", "type": "string", "display": true, "required": false, "displayName": "ClientEmail" },
+            { "id": "CompanyName", "type": "string", "display": true, "required": false, "displayName": "CompanyName" },
+            { "id": "CompanyWebsite", "type": "string", "display": true, "required": false, "displayName": "CompanyWebsite" },
+            { "id": "ProjectRequirements", "type": "string", "display": true, "required": false, "displayName": "ProjectRequirements" },
+            { "id": "BudgetRange", "type": "string", "display": true, "required": false, "displayName": "BudgetRange" },
+            { "id": "Phone", "type": "string", "display": true, "required": false, "displayName": "Phone" },
+            { "id": "SubmittedAt", "type": "string", "display": true, "required": false, "displayName": "SubmittedAt" },
+            { "id": "Status", "type": "string", "display": true, "required": false, "displayName": "Status" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "logToSheet", "name": "Log Lead to Google Sheets", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.7, "position": [672, 208],
+      "notes": "STEP 2: Append lead data to 'Proposals' tab (Google Sheets as CRM)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('Transform & Clean Data').first().json;\n\nconst proposalHtml = `\n<html><head><style>\n  body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; }\n  h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }\n  h2 { color: #2c3e50; margin-top: 25px; }\n  .info-table { width: 100%; border-collapse: collapse; margin: 15px 0; }\n  .info-table td { padding: 8px 12px; border-bottom: 1px solid #ecf0f1; }\n  .info-table td:first-child { font-weight: bold; color: #555; width: 40%; }\n  .footer { color: #7f8c8d; font-size: 12px; margin-top: 30px; border-top: 1px solid #ecf0f1; padding-top: 15px; }\n</style></head><body>\n  <h1>Sales Proposal</h1>\n  <table class=\"info-table\">\n    <tr><td>Date</td><td>${data.DisplayDate}</td></tr>\n    <tr><td>Prepared for</td><td>${data.ClientName}</td></tr>\n    <tr><td>Company</td><td>${data.CompanyName}</td></tr>\n    <tr><td>Email</td><td>${data.ClientEmail}</td></tr>\n    <tr><td>Phone</td><td>${data.Phone || 'N/A'}</td></tr>\n  </table>\n  <h2>Project Overview</h2>\n  <p>${data.ProjectRequirements || 'To be discussed during consultation.'}</p>\n  <h2>Budget Range</h2>\n  <p>${data.BudgetRange || 'To be determined based on project scope.'}</p>\n  <h2>Next Steps</h2>\n  <ol><li>Review this proposal</li><li>Schedule a consultation call</li><li>Sign the agreement to begin work</li></ol>\n  <h2>Terms</h2>\n  <p>This proposal is valid for 30 days. Pricing subject to change based on final requirements.</p>\n  <p class=\"footer\">Automated proposal. A team member will follow up within 1 business day.</p>\n</body></html>`;\n\nconst subject = `Proposal for ${data.CompanyName} - ${data.DisplayDate}`;\nconst pdfFileName = `Proposal_${data.CompanyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;\n\nreturn [{ json: { ...data, ProposalHtml: proposalHtml, EmailSubject: subject, PdfFileName: pdfFileName } }];"
+      },
+      "id": "generateProposal", "name": "Generate Proposal Content", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [896, 208],
+      "notes": "STEP 3: Generate HTML proposal from template\nData created: ProposalHtml, EmailSubject, PdfFileName"
+    },
+    {
+      "parameters": {
+        "method": "POST", "url": "https://api.pdf.co/v1/pdf/convert/from/html",
+        "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth",
+        "sendBody": true, "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ html: $json.ProposalHtml, name: $json.PdfFileName, margins: '15px 20px 15px 20px', paperSize: 'Letter', orientation: 'Portrait' }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "id": "pdfCo", "name": "Generate PDF via PDF.co", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.4, "position": [1120, 208],
+      "retryOnFail": true, "maxTries": 2, "waitBetweenTries": 3000,
+      "notes": "STEP 4: API ENRICHMENT - Convert HTML to PDF via PDF.co\nRetry logic: 2 retries, 3s delay"
+    },
+    {
+      "parameters": {
+        "jsCode": "const pdfResponse = $input.first().json;\nconst prevData = $('Generate Proposal Content').first().json;\nconst pdfUrl = pdfResponse.url || '';\nconst pdfError = pdfResponse.error ? pdfResponse.message || 'PDF generation failed' : '';\nreturn [{ json: { ...prevData, PdfUrl: pdfUrl, PdfError: pdfError, _pdfGenerated: pdfUrl.length > 0 && !pdfResponse.error } }];"
+      },
+      "id": "parsePdfResponse", "name": "Parse PDF Response", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [1344, 208],
+      "notes": "STEP 5: Parse PDF.co response\nFallback: Sets _pdfGenerated=false if error"
+    },
+    {
+      "parameters": {
+        "resource": "message", "operation": "send",
+        "sendTo": "={{ $json.ClientEmail }}", "subject": "={{ $json.EmailSubject }}",
+        "emailType": "html",
+        "message": "=<p>Hi {{ $json.ClientName }},</p>\n<p>Thank you for your interest! Please find our proposal attached as a PDF.</p>\n<p>You can also view/download it here: <a href=\"{{ $json.PdfUrl }}\">Download Proposal PDF</a></p>\n<p>We'll follow up within 1 business day to discuss next steps.</p>\n<p>Best regards,<br>The Sales Team</p>",
+        "options": {}
+      },
+      "id": "sendProposal", "name": "Send Proposal via Gmail", "type": "n8n-nodes-base.gmail", "typeVersion": 2.2, "position": [1568, 208],
+      "retryOnFail": true, "maxTries": 2, "waitBetweenTries": 3000,
+      "notes": "STEP 6: Send proposal email with PDF link\nRetry logic: 2 retries, 3s delay"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "version": 2, "leftValue": "", "caseSensitive": false, "typeValidation": "strict" },
+          "combinator": "and",
+          "conditions": [{ "id": "cond-sent", "operator": { "type": "string", "operation": "isNotEmpty", "singleValue": true }, "leftValue": "={{ $json.id }}", "rightValue": "" }]
+        },
+        "options": {}
+      },
+      "id": "ifEmailSent", "name": "Email Sent Successfully?", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [1792, 208],
+      "notes": "CONDITIONAL LOGIC:\nIF Gmail returns message ID > TRUE > update sheet\nIF no ID > FALSE > mark failed"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate", "documentId": { "__rl": true, "mode": "url", "value": "" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Proposals" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": { "ClientEmail": "={{ $json.ClientEmail }}", "Status": "Proposal Sent", "ProposalSentAt": "={{ $now.toISO() }}", "PdfUrl": "={{ $json.PdfUrl }}" },
+          "matchingColumns": ["ClientEmail"],
+          "schema": [
+            { "id": "ClientEmail", "type": "string", "display": true, "required": false, "displayName": "ClientEmail", "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "Status", "type": "string", "display": true, "required": false, "displayName": "Status" },
+            { "id": "ProposalSentAt", "type": "string", "display": true, "required": false, "displayName": "ProposalSentAt" },
+            { "id": "PdfUrl", "type": "string", "display": true, "required": false, "displayName": "PdfUrl" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "updateSheetSent", "name": "Update Sheet - Proposal Sent", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.7, "position": [2016, 112],
+      "notes": "STEP 7A: Update status to 'Proposal Sent' with PDF URL"
+    },
+    {
+      "parameters": {
+        "select": "channel", "channelId": { "__rl": true, "mode": "name", "value": "#sales-proposals" },
+        "operation": "post",
+        "text": "=:page_facing_up: *New Proposal Sent*\n\n*Client:* {{ $json.ClientName }}\n*Company:* {{ $json.CompanyName }}\n*Budget:* {{ $json.BudgetRange || 'TBD' }}\n*Requirements:* {{ $json.ProjectRequirements ? $json.ProjectRequirements.substring(0, 100) : 'See proposal' }}\n\n*Status:* Proposal sent automatically. Follow up if no response in 3 days.",
+        "otherOptions": {}
+      },
+      "id": "slackNotify", "name": "Notify Sales in Slack", "type": "n8n-nodes-base.slack", "typeVersion": 2.4, "position": [2016, 320],
+      "notes": "NOTIFICATION: New proposal sent alert to #sales-proposals\nSecurity: PII removed (no email, phone, PDF URL); requirements truncated to 100 chars"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate", "documentId": { "__rl": true, "mode": "url", "value": "" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Proposals" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": { "ClientEmail": "={{ $json.ClientEmail }}", "Status": "Send Failed" },
+          "matchingColumns": ["ClientEmail"],
+          "schema": [
+            { "id": "ClientEmail", "type": "string", "display": true, "required": false, "displayName": "ClientEmail", "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "Status", "type": "string", "display": true, "required": false, "displayName": "Status" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "markSendFailed", "name": "Mark Send Failed", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.7, "position": [2016, 500],
+      "notes": "STEP 7B-ALT: Mark as Send Failed in sheet"
+    },
+    {
+      "parameters": {
+        "select": "channel", "channelId": { "__rl": true, "mode": "name", "value": "#ops-alerts" },
+        "operation": "post",
+        "text": "=:warning: *Proposal Send Failed*\n\n*Client:* {{ $json.ClientName }}\n*Email:* {{ $json.ClientEmail }}\n*Company:* {{ $json.CompanyName }}\n\nGmail could not deliver the proposal. Please send manually.\n*PDF:* {{ $json.PdfUrl || 'PDF not generated' }}",
+        "otherOptions": {}
+      },
+      "id": "notifyFailure", "name": "Alert Ops - Send Failed", "type": "n8n-nodes-base.slack", "typeVersion": 2.4, "position": [2240, 500],
+      "notes": "NOTIFICATION: Proposal send failure alert to #ops-alerts"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate", "documentId": { "__rl": true, "mode": "url", "value": "" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Proposals" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": { "ClientEmail": "={{ $json.ClientEmail || 'unknown' }}", "ClientName": "={{ $json.ClientName || 'unknown' }}", "Status": "Validation Failed - Missing Data", "SubmittedAt": "={{ $json.SubmittedAt }}" },
+          "matchingColumns": ["ClientEmail"],
+          "schema": [
+            { "id": "ClientEmail", "type": "string", "display": true, "required": false, "displayName": "ClientEmail", "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "ClientName", "type": "string", "display": true, "required": false, "displayName": "ClientName" },
+            { "id": "Status", "type": "string", "display": true, "required": false, "displayName": "Status" },
+            { "id": "SubmittedAt", "type": "string", "display": true, "required": false, "displayName": "SubmittedAt" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "logValidationFail", "name": "Log Validation Failure", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.7, "position": [672, 480],
+      "notes": "STEP 2-ALT: Log incomplete submissions with Status='Validation Failed - Missing Data'"
+    },
+    {
+      "parameters": {},
+      "id": "errorTrigger", "name": "Error Trigger", "type": "n8n-nodes-base.errorTrigger", "typeVersion": 1, "position": [0, 650],
+      "notes": "ERROR HANDLING: Catches any unhandled workflow errors"
+    },
+    {
+      "parameters": {
+        "select": "channel", "channelId": { "__rl": true, "mode": "name", "value": "#ops-alerts" },
+        "operation": "post",
+        "text": "=:rotating_light: *Workflow Error Alert*\n\n*Workflow:* Sales Proposal & Contract Automation\n*Run ID:* {{ $json.execution.id }}\n*Time:* {{ $json.execution.startedAt }}\n*Error Type:* {{ $json.execution.error.message }}",
+        "otherOptions": {}
+      },
+      "id": "errorSlack", "name": "Send Error Alert", "type": "n8n-nodes-base.slack", "typeVersion": 2.4, "position": [224, 650],
+      "notes": "ERROR NOTIFICATION: Alert ops team via #ops-alerts"
+    },
+    {
+      "parameters": {
+        "operation": "append", "documentId": { "__rl": true, "mode": "url", "value": "" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Error Log" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow": "Sales Proposal & Contract Automation",
+            "RunID": "={{ $json.execution.id }}",
+            "Timestamp": "={{ $json.execution.startedAt }}",
+            "ErrorType": "={{ $json.execution.error.message }}",
+            "FailedNode": "={{ $json.execution.lastNodeExecuted }}",
+            "OriginalInput": "={{ JSON.stringify($json.execution.data || {}).substring(0, 1000) }}"
+          },
+          "schema": [
+            { "id": "Workflow", "type": "string", "display": true, "required": false, "displayName": "Workflow" },
+            { "id": "RunID", "type": "string", "display": true, "required": false, "displayName": "RunID" },
+            { "id": "Timestamp", "type": "string", "display": true, "required": false, "displayName": "Timestamp" },
+            { "id": "ErrorType", "type": "string", "display": true, "required": false, "displayName": "ErrorType" },
+            { "id": "FailedNode", "type": "string", "display": true, "required": false, "displayName": "FailedNode" },
+            { "id": "OriginalInput", "type": "string", "display": true, "required": false, "displayName": "OriginalInput" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "logErrorSheet", "name": "Log Error to Sheet", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.7, "position": [0, 820],
+      "notes": "ERROR HANDLING: Store error + original input to Google Sheets Error Log tab"
+    },
+    {
+      "parameters": {
+        "select": "channel", "channelId": { "__rl": true, "mode": "name", "value": "#sales-proposals" },
+        "operation": "post",
+        "text": "=:white_check_mark: *Workflow Run Successful*\n\nRecords processed: 1\nTime: {{ $now.toISO() }}",
+        "otherOptions": {}
+      },
+      "id": "successNotify", "name": "Send Success Notification", "type": "n8n-nodes-base.slack", "typeVersion": 2.4, "position": [2240, 112],
+      "notes": "SUCCESS NOTIFICATION: Confirm proposal workflow completed via #sales-proposals"
+    }
+  ],
+  "connections": {
+    "Fillout Form Submission": { "main": [[{ "node": "Transform & Clean Data", "type": "main", "index": 0 }]] },
+    "Transform & Clean Data": { "main": [[{ "node": "Valid Lead Data?", "type": "main", "index": 0 }]] },
+    "Valid Lead Data?": { "main": [[{ "node": "Log Lead to Google Sheets", "type": "main", "index": 0 }], [{ "node": "Log Validation Failure", "type": "main", "index": 0 }]] },
+    "Log Lead to Google Sheets": { "main": [[{ "node": "Generate Proposal Content", "type": "main", "index": 0 }]] },
+    "Generate Proposal Content": { "main": [[{ "node": "Generate PDF via PDF.co", "type": "main", "index": 0 }]] },
+    "Generate PDF via PDF.co": { "main": [[{ "node": "Parse PDF Response", "type": "main", "index": 0 }]] },
+    "Parse PDF Response": { "main": [[{ "node": "Send Proposal via Gmail", "type": "main", "index": 0 }]] },
+    "Send Proposal via Gmail": { "main": [[{ "node": "Email Sent Successfully?", "type": "main", "index": 0 }]] },
+    "Email Sent Successfully?": { "main": [[{ "node": "Update Sheet - Proposal Sent", "type": "main", "index": 0 }, { "node": "Notify Sales in Slack", "type": "main", "index": 0 }], [{ "node": "Mark Send Failed", "type": "main", "index": 0 }]] },
+    "Mark Send Failed": { "main": [[{ "node": "Alert Ops - Send Failed", "type": "main", "index": 0 }]] },
+    "Error Trigger": { "main": [[{ "node": "Send Error Alert", "type": "main", "index": 0 }, { "node": "Log Error to Sheet", "type": "main", "index": 0 }]] },
+    "Update Sheet - Proposal Sent": { "main": [[{ "node": "Send Success Notification", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "_metadata": {
+    "student": "Therrance Carrothers",
+    "workflow": "Sales Proposal & Contract Automation (Case 1)",
+    "n8n_url": "https://therrancecarrothers.app.n8n.cloud/workflow/Iar5xzG6KaCj8Gy2",
+    "total_nodes": 18,
+    "rubric_checklist": {
+      "A_trigger": "Fillout Form Submission (Webhook, POST /fillout-proposal, headerAuth enabled)",
+      "B_data_transformation": "Transform & Clean Data (Code node): ClientName title-case, ClientEmail lowercase+trim, Phone strip non-numeric, Date reformatted, Email regex validation, Name presence validation",
+      "C_api_enrichment": "Generate PDF via PDF.co (HTTP Request -> api.pdf.co): HTML-to-PDF conversion with retry 2x/3s",
+      "D_conditional_logic": [
+        "Valid Lead Data? (IF): _emailValid AND _nameValid gates processing",
+        "Email Sent Successfully? (IF): Gmail message ID present routes to success/failure paths"
+      ],
+      "E_ai_agent": "N/A for Case 1 (proposal generation uses template-based Code node, not LLM)",
+      "F_output": [
+        "Log Lead to Google Sheets (append): All normalized fields to Proposals tab",
+        "Update Sheet - Proposal Sent (appendOrUpdate): Status, ProposalSentAt, PdfUrl",
+        "Send Proposal via Gmail: HTML email with PDF download link",
+        "Notify Sales in Slack (#sales-proposals): Client name, company, budget, truncated requirements (PII removed)",
+        "Mark Send Failed + Alert Ops - Send Failed: Failure path with manual review alert"
+      ]
+    },
+    "security_fixes": {
+      "date_applied": "2026-02-18",
+      "changes": [
+        {
+          "node": "Fillout Form Submission",
+          "fix": "Added headerAuth authentication to webhook trigger to prevent unauthorized submissions",
+          "fields_changed": ["authentication: headerAuth", "options.rawBody: false"]
+        },
+        {
+          "node": "Notify Sales in Slack",
+          "fix": "Removed PII from Slack notification to prevent data leakage in channel messages",
+          "fields_removed": ["ClientEmail", "Phone", "PdfUrl"],
+          "fields_changed": ["ProjectRequirements truncated from 200 to 100 characters"]
+        }
+      ],
+      "rationale": "Slack channels are broadly visible; client email, phone, and PDF URLs should not be exposed in notification messages. Webhook authentication prevents spoofed form submissions."
+    },
+    "error_handling": {
+      "error_trigger": "Error Trigger (global catch) fires on any unhandled error",
+      "store_error": "Log Error to Sheet (Google Sheets -> Error Log tab): Stores Workflow, RunID, Timestamp, ErrorType, FailedNode, OriginalInput",
+      "notify_team": "Send Error Alert (Slack -> #ops-alerts): Rubric-format template with Workflow, Run ID, Time, Error Type",
+      "retry_logic": { "pdf_co": "2 retries, 3s backoff", "gmail": "2 retries, 3s backoff" },
+      "fallback_paths": [
+        "Valid Lead Data?: Routes invalid submissions to Log Validation Failure (skip record)",
+        "Email Sent Successfully?: Routes failed sends to Mark Send Failed + Alert Ops (manual review)",
+        "Parse PDF Response: Sets _pdfGenerated=false if PDF.co returns error"
+      ],
+      "success_notification": "Send Success Notification (Slack -> #sales-proposals): Records processed + timestamp"
+    },
+    "data_transformation": {
+      "client_name": "Title-cased from form input",
+      "client_email": "Trimmed, lowercased, regex-validated",
+      "phone": "Non-numeric characters stripped (except +, -, (, ), space)",
+      "dates": "Reformatted to ISO timestamp (SubmittedAt) and display format (DisplayDate)",
+      "proposal_html": "Generated from template with client data interpolation"
+    },
+    "api_enrichment": { "pdf_co": "HTML-to-PDF conversion via PDF.co API - generates downloadable proposal document" },
+    "data_validation": {
+      "email_format": "Regex validation in Transform & Clean Data (_emailValid flag)",
+      "name_presence": "Non-empty check in Transform & Clean Data (_nameValid flag)",
+      "combined_gate": "Valid Lead Data? IF node requires both _emailValid AND _nameValid"
+    },
+    "assumptions": [
+      "Google Sheet has 'Proposals' tab with columns: ClientName, ClientEmail, CompanyName, CompanyWebsite, ProjectRequirements, BudgetRange, Phone, SubmittedAt, Status, ProposalSentAt, PdfUrl",
+      "Google Sheet has 'Error Log' tab with columns: Workflow, RunID, Timestamp, ErrorType, FailedNode, OriginalInput",
+      "PDF.co API key configured in HTTP Header Auth credentials (x-api-key header)",
+      "Gmail OAuth2 configured for sending proposal emails",
+      "Slack OAuth2 configured with access to #sales-proposals and #ops-alerts channels",
+      "Fillout form webhook configured to POST to n8n webhook URL /fillout-proposal",
+      "Webhook header auth credential configured to validate incoming Fillout requests"
+    ]
+  }
+}

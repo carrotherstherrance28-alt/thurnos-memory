@@ -1,0 +1,26 @@
+# Node
+node_modules/
+npm-debug.log*
+.npm
+
+# Environment
+.env
+.env.*
+*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude internals
+.claude/todos/
+.claude/statsig/
+.claude/shell-snapshots/
+.claude/ide/
+
+# Credentials — never commit these
+*credentials*
+*secret*
+*token*
+*.pem
+*.key
