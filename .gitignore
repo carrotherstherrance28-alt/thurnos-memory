@@ -19,8 +19,13 @@ Thumbs.db
 .claude/ide/
 
 # Credentials — never commit these
+.secrets
+credentials/
 *credentials*
 *secret*
 *token*
 *.pem
 *.key
+*service-account*.json
+*service_account*.json
+*.json.secret
