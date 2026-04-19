@@ -17,5 +17,11 @@ credentials-file: /Users/thurr/.cloudflared/d8e11dda-9d0f-4c45-8587-b2fbe0795d5c
 ingress:
   - hostname: hermes.thurrsolutions.com
     service: http://localhost:11434
+    # Rewrite Host header to "localhost" — ollama rejects any other Host
+    # with 403 Forbidden (it only accepts requests where Host is localhost
+    # or 127.0.0.1). Without this, hermes.thurrsolutions.com requests get
+    # proxied through but ollama returns 403 at the origin.
+    originRequest:
+      httpHostHeader: localhost
   # Catch-all — required by cloudflared. Anything not matching above gets a 404.
   - service: http_status:404
