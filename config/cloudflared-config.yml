@@ -1,0 +1,21 @@
+# Cloudflare tunnel config for Hermes (ollama exposure)
+#
+# Source of truth: this file, in the thurnos-memory repo.
+# Deployed location: ~/.cloudflared/config.yml on Thurr's Mac Mini M4 Pro.
+#
+# To apply changes after editing this file:
+#   cp config/cloudflared-config.yml ~/.cloudflared/config.yml
+#   sudo launchctl kickstart -k system/com.cloudflare.cloudflared    # once service is installed
+#
+# Tunnel: hermes
+# Exposes: local ollama (http://localhost:11434) at https://hermes.thurrsolutions.com
+# Auth: fronted by Cloudflare Access application + service token (configured in dashboard)
+
+tunnel: d8e11dda-9d0f-4c45-8587-b2fbe0795d5c
+credentials-file: /Users/thurr/.cloudflared/d8e11dda-9d0f-4c45-8587-b2fbe0795d5c.json
+
+ingress:
+  - hostname: hermes.thurrsolutions.com
+    service: http://localhost:11434
+  # Catch-all — required by cloudflared. Anything not matching above gets a 404.
+  - service: http_status:404
