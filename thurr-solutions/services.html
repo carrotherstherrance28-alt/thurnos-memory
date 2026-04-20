@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thurr Solutions | AI Automation for Local Service Businesses</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23070809'/><text font-size='54' font-family='Arial Black,sans-serif' font-weight='900' fill='white' x='18' y='72'>T</text><text font-size='54' font-family='Arial Black,sans-serif' font-weight='900' fill='%23f36c21' x='52' y='72'>R</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black:   #070809;
+    --dark1:   #0e1012;
+    --dark2:   #141618;
+    --dark3:   #1a1d21;
+    --card:    #1e2226;
+    --card2:   #23282e;
+    --border:  #2a3038;
+    --border2: #333c45;
+
+    --orange:  #f36c21;
+    --orange2: #d95e18;
+    --orange3: #f58040;
+    --orangeL: rgba(243,108,33,0.12);
+    --orangeB: rgba(243,108,33,0.25);
+
+    --blue:    #3e50a1;
+    --blue2:   #2f3e88;
+    --blue3:   #5f72be;
+    --blueL:   rgba(62,80,161,0.12);
+    --blueB:   rgba(62,80,161,0.25);
+
+    --white:   #ffffff;
+    --text:    #f0f2f5;
+    --light:   #c9d1db;
+    --muted:   #7d8a97;
+    --dim:     #4a5563;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--black); color: var(--text); line-height: 1.6; }
+
+  h1, h2, h3 { font-family: 'Oswald', 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 0.03em; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(7,8,9,0.92); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+  .nav-brand {
+    display: flex; flex-direction: column; line-height: 1;
+    text-decoration: none; gap: 0;
+  }
+  .nav-brand .brand-right {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .nav-brand .brand-thurr {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 1.3rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--orange);
+  }
+  .nav-links { display: flex; gap: 2.25rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--orange); color: var(--white);
+    padding: 0.5rem 1.25rem; border-radius: 7px;
+    text-decoration: none; font-size: 0.875rem; font-weight: 700;
+    transition: all 0.2s; box-shadow: 0 0 20px rgba(249,115,22,0.3);
+  }
+  .nav-cta:hover { background: var(--orange2); box-shadow: 0 0 30px rgba(249,115,22,0.5); }
+
+  /* ── SHARED ── */
+  section { padding: 5.5rem 2.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--orange); margin-bottom: 0.6rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; margin-bottom: 0.75rem; color: var(--white); letter-spacing: -0.02em; line-height: 1.15; }
+  .section-sub { font-size: 1rem; color: var(--muted); max-width: 580px; margin-bottom: 3rem; line-height: 1.7; }
+  .alt-bg { background: var(--dark1); }
+  .btn-primary {
+    background: var(--orange); color: var(--white);
+    padding: 0.9rem 2rem; border-radius: 8px;
+    text-decoration: none; font-weight: 800; font-size: 0.95rem;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 24px rgba(249,115,22,0.35);
+  }
+  .btn-primary:hover { background: var(--orange2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(249,115,22,0.5); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    padding: 0.9rem 2rem; border-radius: 8px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    border: 1px solid var(--border2); transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-secondary:hover { border-color: var(--blue); color: var(--blue3); background: var(--blueL); }
+
+  /* ── HERO ── */
+  .hero {
+    display: flex; align-items: center;
+    padding: 130px 2.5rem 6rem;
+    background: var(--black); position: relative; overflow: hidden;
+  }
+  .hero-glow1 { position: absolute; top: -100px; right: -100px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+  .hero-glow2 { position: absolute; bottom: -150px; left: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+  .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.15; pointer-events: none; }
+  .hero-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .available-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--orangeL); border: 1px solid var(--orangeB);
+    color: var(--orange3); padding: 0.4rem 1rem; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700; margin-bottom: 2rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .available-dot { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+
+  .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 0.6rem; color: var(--white); }
+  .hero h1 .accent { background: linear-gradient(135deg, var(--orange) 0%, var(--orange3) 50%, var(--blue3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--light); max-width: 680px; margin-bottom: 2.5rem; line-height: 1.75; border-left: 3px solid var(--orange); padding-left: 1.25rem; }
+  .hero-sub strong { color: var(--white); }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+
+  .hero-stats { display: flex; gap: 0; flex-wrap: wrap; background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; width: fit-content; }
+  .hero-stat { padding: 1.25rem 2rem; border-right: 1px solid var(--border); }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num { font-size: 1.75rem; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; }
+  .hero-stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+
+  /* ── CAPABILITIES ── */
+  .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .cap-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .cap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--blue)); opacity: 0; transition: opacity 0.25s; }
+  .cap-card:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .cap-card:hover::before { opacity: 1; }
+  .cap-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .cap-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.6rem; color: var(--white); }
+  .cap-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── RESULTS BANNER ── */
+  .results-banner {
+    background: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(59,130,246,0.06) 100%);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 4rem 2.5rem;
+  }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; max-width: 1100px; margin: 0 auto; }
+  .result-item .num { font-size: 2.75rem; font-weight: 900; color: var(--orange); line-height: 1; letter-spacing: -0.03em; }
+  .result-item .lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.5rem; }
+  .result-item .desc { font-size: 0.8rem; color: var(--dim); margin-top: 0.35rem; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .testimonial-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    transition: all 0.25s;
+  }
+  .testimonial-card:hover { border-color: var(--orangeB); box-shadow: 0 8px 32px rgba(249,115,22,0.08); }
+  .testimonial-quote { font-size: 0.925rem; color: var(--light); line-height: 1.75; margin-bottom: 1.5rem; font-style: italic; }
+  .testimonial-quote::before { content: '"'; color: var(--orange); font-size: 1.5rem; font-style: normal; line-height: 0; vertical-align: -0.4rem; margin-right: 0.2rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+  .testimonial-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--blue)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; color: var(--white); flex-shrink: 0; }
+  .testimonial-name { font-size: 0.875rem; font-weight: 700; color: var(--white); }
+  .testimonial-role { font-size: 0.75rem; color: var(--muted); }
+  .placeholder-note { font-size: 0.7rem; color: var(--dim); font-style: italic; margin-top: 1rem; text-align: center; }
+
+  /* ── WHO ── */
+  .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .who-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; transition: all 0.2s; }
+  .who-card:hover { border-color: var(--blue); background: var(--blueL); transform: translateY(-2px); }
+  .who-card .icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+  .who-card h4 { font-size: 0.925rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--white); }
+  .who-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── ABOUT ── */
+  .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+  @media (max-width: 768px) { .about-wrap { grid-template-columns: 1fr; } }
+  .about-statement { font-size: clamp(1.05rem, 2.2vw, 1.25rem); color: var(--white); line-height: 1.75; font-weight: 500; border-left: 3px solid var(--orange); padding-left: 1.5rem; }
+  .about-detail { font-size: 0.925rem; color: var(--light); line-height: 1.85; }
+
+  /* ── CONTACT ── */
+  .contact-wrap { max-width: 760px; margin: 0 auto; text-align: center; }
+  .contact-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2.5rem 0; }
+  .contact-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; text-decoration: none; color: var(--text); transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .contact-card:hover { border-color: var(--orange); background: var(--orangeL); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(249,115,22,0.15); }
+  .contact-card .icon { font-size: 1.75rem; }
+  .contact-card .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .contact-card .value { font-size: 0.875rem; font-weight: 700; color: var(--white); }
+  .contact-note { font-size: 0.8rem; color: var(--muted); margin-top: 1.5rem; }
+  .contact-note a { color: var(--orange); text-decoration: none; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--dark1); border-top: 1px solid var(--border); padding: 2rem 2.5rem; text-align: center; font-size: 0.78rem; color: var(--dim); }
+  footer a { color: var(--dim); text-decoration: none; transition: color 0.2s; }
+  footer a:hover { color: var(--orange); }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+
+  /* ── BRAND LOGO ── */
+  .brand-logo-wrap { margin-bottom: 1.5rem; }
+  .brand-logo { height: 72px; width: auto; border-radius: 14px; display: block; }
+  .brand-logo-center { height: 80px; width: auto; border-radius: 14px; display: block; margin: 0 auto 2rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.25rem; }
+    .hero { padding: 95px 1.25rem 3.5rem; }
+    .hero-stats { width: 100%; }
+    .hero-stat { padding: 1rem 1.25rem; flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <span class="brand-right">Right</span>
+    <span class="brand-thurr">Thurr</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="index.html">Portfolio →</a></li>
+  </ul>
+  <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="nav-cta">Book Free Demo →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="available-badge">
+      <span class="available-dot"></span>
+      Now serving Houston, TX &amp; St. Louis, MO
+    </div>
+    <h1>Stop Losing Leads to<br><span class="accent">Slow Follow-Up</span></h1>
+    <p class="hero-sub">
+      Every hour your team spends manually texting leads, building proposals, and updating spreadsheets is an hour a competitor is closing the job.<br>
+      <strong>Thurr Solutions automates your entire lead-to-close process</strong> — so you respond faster, follow up consistently, and close more deals without adding staff.
+    </p>
+    <div class="hero-actions">
+      <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="btn-primary">Book a Free Demo →</a>
+      <a href="#services" class="btn-secondary">See How It Works ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">87%</div>
+        <div class="hero-stat-label">Faster Processing</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">16 days</div>
+        <div class="hero-stat-label">Avg Payback</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$1,280/mo</div>
+        <div class="hero-stat-label">Net Benefit</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">24/7</div>
+        <div class="hero-stat-label">Automated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="alt-bg" id="services">
+  <div class="section-inner">
+    <div class="section-label">What I Build</div>
+    <h2 class="section-title">Automate Leads. Respond Faster. Close More Deals.</h2>
+    <p class="section-sub">Six systems that eliminate the manual work between a new inquiry and a signed contract.</p>
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-icon">📥</div>
+        <h3>Lead Capture</h3>
+        <p>Automatically collect inquiries from your website, ads, and referrals in one place. No missed leads, no manual data entry, no falling through the cracks.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">⚡</div>
+        <h3>AI Instant Responses</h3>
+        <p>Personalized replies reach prospects within minutes — not hours. In storm season, the first company to respond wins the job. Beat your competitors to the inbox every time.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🎯</div>
+        <h3>Lead Qualification</h3>
+        <p>AI scores and prioritizes your best prospects automatically. Your team spends time on leads most likely to convert — not chasing bad fits.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🔄</div>
+        <h3>Follow-Up Automation</h3>
+        <p>Scheduled, timely follow-ups keep prospects engaged automatically until they book or opt out. No manual reminders. No leads going cold.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">📄</div>
+        <h3>Proposal Generation</h3>
+        <p>Branded proposals generated and delivered in under 10 minutes — automatically. Proposal turnaround from 24–48 hours down to before your competitor opens their laptop.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">📊</div>
+        <h3>Deal Tracking</h3>
+        <p>Every lead moves through your pipeline automatically. Always know where prospects stand and what needs to happen next — without manual updates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS BANNER -->
+<section class="results-banner" id="results">
+  <div class="results-grid">
+    <div class="result-item">
+      <div class="num">Under 2 min</div>
+      <div class="lbl">Lead Response Time</div>
+      <div class="desc">Down from 24–48 hours</div>
+    </div>
+    <div class="result-item">
+      <div class="num">87%</div>
+      <div class="lbl">Less Manual Work</div>
+      <div class="desc">Per lead processed</div>
+    </div>
+    <div class="result-item">
+      <div class="num">16 days</div>
+      <div class="lbl">Average Payback</div>
+      <div class="desc">System pays for itself fast</div>
+    </div>
+    <div class="result-item">
+      <div class="num">24/7</div>
+      <div class="lbl">Continuous Operation</div>
+      <div class="desc">Nights, weekends, storm season</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-inner">
+    <div class="section-label">Client Results</div>
+    <h2 class="section-title">Local Service Businesses Trust Thurr Solutions</h2>
+    <p class="section-sub">See how automation helps contractors stop losing leads and close more jobs every month.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">We were losing leads to slower competitors because our follow-up wasn't fast enough. After automating our response process we closed 40% more jobs in the first month. The system paid for itself in two weeks.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">M</div>
+          <div>
+            <div class="testimonial-name">Marcus Johnson</div>
+            <div class="testimonial-role">Owner, Johnson Roofing — Houston, TX</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">Our team was spending hours manually texting back leads. Now we respond in seconds instead of hours and our close rate jumped significantly. I wish we had done this two years ago.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">E</div>
+          <div>
+            <div class="testimonial-name">Elena Reyes</div>
+            <div class="testimonial-role">General Manager, Reyes HVAC Services</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">As a solo operator I couldn't afford to miss leads. Thurr Solutions gave me the ability to compete with bigger companies by responding faster. It's made a huge difference in my bottom line.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div>
+            <div class="testimonial-name">Anthony Torres</div>
+            <div class="testimonial-role">Founder, Torres Contracting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="placeholder-note">* Testimonials above are illustrative examples — replace with real client quotes once collected.</p>
+  </div>
+</section>
+
+<!-- WHO THIS IS FOR -->
+<section class="alt-bg" id="about">
+  <div class="section-inner">
+    <div class="section-label">Who I Work With</div>
+    <h2 class="section-title">Built for Local Service Businesses</h2>
+    <p class="section-sub" style="margin-bottom:2rem">I work with service contractors and SMBs ready to stop doing things manually and start building systems that scale.</p>
+    <div class="who-grid" style="margin-bottom:3.5rem">
+      <div class="who-card"><div class="icon">🏠</div><h4>Roofing Contractors</h4><p>Storm season demand spikes — your proposal and lead intake should run automatically</p></div>
+      <div class="who-card"><div class="icon">🌡️</div><h4>HVAC Companies</h4><p>Seasonal volume means fast follow-up wins the job — automate first contact</p></div>
+      <div class="who-card"><div class="icon">🔧</div><h4>Plumbers & Electricians</h4><p>Every missed call is a missed job — capture and respond to every inquiry automatically</p></div>
+      <div class="who-card"><div class="icon">🏗️</div><h4>General Contractors</h4><p>Proposal delays lose bids — get branded proposals out in under 10 minutes</p></div>
+      <div class="who-card"><div class="icon">🚀</div><h4>Growing Service SMBs</h4><p>Want to scale without hiring — better systems, not more headcount</p></div>
+    </div>
+    <div class="about-wrap">
+      <p class="about-statement">I look at your P&L first, find where manual labor is eating your margin, and engineer it out of existence.</p>
+      <p class="about-detail">Most automation consultants are tech-first — they build tools and hand you a workflow. I'm Finance-first. My background at the University of Missouri (BS Finance, Trulaske College of Business) means I start every engagement with one question: where is time and money leaking out of this business?<br><br>Every system I build comes with a full ROI analysis — before I write a single line of automation. You know exactly what it costs, what it saves, and how fast it pays back. That's the Thurr Solutions difference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-wrap">
+      <img src="right%20thurr%20logo-11.png" alt="Right Thurr" class="brand-logo-center">
+      <div class="section-label" style="text-align:center">Let's Talk</div>
+      <h2 class="section-title" style="text-align:center">Ready to Stop Losing Leads?</h2>
+      <p class="section-sub" style="text-align:center;margin:0 auto 0">Book a free workflow audit — I'll show you exactly where automation delivers the most value for your business and what it's worth in dollars.</p>
+      <div class="contact-cards">
+        <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="contact-card">
+          <div class="icon">📅</div>
+          <div class="label">Book a Demo</div>
+          <div class="value">Free Workflow Audit</div>
+        </a>
+        <a href="mailto:therrance@thurrsolutions.com" class="contact-card">
+          <div class="icon">✉️</div>
+          <div class="label">Email</div>
+          <div class="value">therrance@thurrsolutions.com</div>
+        </a>
+        <a href="https://www.linkedin.com/in/therrancecarrothers" target="_blank" class="contact-card">
+          <div class="icon">💼</div>
+          <div class="label">LinkedIn</div>
+          <div class="value">Therrance Carrothers</div>
+        </a>
+      </div>
+      <p class="contact-note">
+        Houston, TX &amp; St. Louis, MO · Available remotely worldwide<br>
+        <a href="index.html">View full portfolio →</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 <a href="index.html">Thurr Solutions</a> · Therrance Carrothers</span>
+    <span>AI Automation for Local Service Businesses · Houston, TX</span>
+    <span><a href="index.html">Portfolio</a> · <a href="mailto:therrance@thurrsolutions.com">Contact</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Therrance Carrothers | AI Automation Consultant</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23070809'/><text font-size='54' font-family='Arial Black,sans-serif' font-weight='900' fill='white' x='18' y='72'>T</text><text font-size='54' font-family='Arial Black,sans-serif' font-weight='900' fill='%23f36c21' x='52' y='72'>R</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black:   #070809;
+    --dark1:   #0e1012;
+    --dark2:   #141618;
+    --dark3:   #1a1d21;
+    --card:    #1e2226;
+    --card2:   #23282e;
+    --border:  #2a3038;
+    --border2: #333c45;
+
+    --orange:  #f36c21;
+    --orange2: #d95e18;
+    --orange3: #f58040;
+    --orangeL: rgba(243,108,33,0.12);
+    --orangeB: rgba(243,108,33,0.25);
+
+    --blue:    #3e50a1;
+    --blue2:   #2f3e88;
+    --blue3:   #5f72be;
+    --blueL:   rgba(62,80,161,0.12);
+    --blueB:   rgba(62,80,161,0.25);
+
+    --white:   #ffffff;
+    --text:    #f0f2f5;
+    --light:   #c9d1db;
+    --muted:   #7d8a97;
+    --dim:     #4a5563;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 { font-family: 'Oswald', 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 0.03em; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(7,8,9,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+  .nav-brand {
+    display: flex; flex-direction: column; line-height: 1;
+    text-decoration: none; gap: 0;
+  }
+  .nav-brand .brand-right {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .nav-brand .brand-thurr {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 1.3rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--orange);
+  }
+  .nav-links { display: flex; gap: 2.25rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.875rem; font-weight: 500;
+    transition: color 0.2s; letter-spacing: 0.01em;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--orange); color: var(--white);
+    padding: 0.5rem 1.25rem; border-radius: 7px;
+    text-decoration: none; font-size: 0.875rem; font-weight: 700;
+    transition: all 0.2s; letter-spacing: 0.01em;
+    box-shadow: 0 0 20px rgba(249,115,22,0.3);
+  }
+  .nav-cta:hover { background: var(--orange2); box-shadow: 0 0 30px rgba(249,115,22,0.5); }
+
+  /* ── HERO ── */
+  .hero {
+    display: flex; align-items: center;
+    padding: 130px 2.5rem 6rem;
+    background: var(--black);
+    position: relative; overflow: hidden;
+  }
+  .hero-glow1 {
+    position: absolute; top: -100px; right: -100px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 65%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute; bottom: -150px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 65%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15; pointer-events: none;
+  }
+  .hero-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .available-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--orangeL); border: 1px solid var(--orangeB);
+    color: var(--orange3); padding: 0.4rem 1rem; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700; margin-bottom: 2rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .available-dot {
+    width: 7px; height: 7px; background: var(--orange);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+    font-weight: 900; line-height: 1.1;
+    letter-spacing: -0.02em; margin-bottom: 0.6rem;
+  }
+  .hero h1 .name { color: var(--white); }
+  .hero h1 .agency {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange3) 50%, var(--blue3) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-title {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--muted); margin-bottom: 1.75rem;
+    font-weight: 400; letter-spacing: 0.01em;
+  }
+  .hero-value {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    color: var(--light); max-width: 680px;
+    margin-bottom: 2.5rem; line-height: 1.75;
+    border-left: 3px solid var(--orange);
+    padding-left: 1.25rem;
+  }
+  .hero-value strong { color: var(--white); }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+  .btn-primary {
+    background: var(--orange); color: var(--white);
+    padding: 0.9rem 2rem; border-radius: 8px;
+    text-decoration: none; font-weight: 800; font-size: 0.95rem;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 24px rgba(249,115,22,0.35);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary:hover { background: var(--orange2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(249,115,22,0.5); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    padding: 0.9rem 2rem; border-radius: 8px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    border: 1px solid var(--border2); transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-secondary:hover { border-color: var(--blue); color: var(--blue3); background: var(--blueL); }
+
+  .hero-stats {
+    display: flex; gap: 0; flex-wrap: wrap;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; width: fit-content;
+  }
+  .hero-stat {
+    padding: 1.25rem 2rem;
+    border-right: 1px solid var(--border);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num { font-size: 1.75rem; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; }
+  .hero-stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+
+  /* ── SHARED ── */
+  section { padding: 5.5rem 2.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.15em; color: var(--orange); margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900; margin-bottom: 0.75rem; color: var(--white);
+    letter-spacing: -0.02em; line-height: 1.15;
+  }
+  .section-sub { font-size: 1rem; color: var(--muted); max-width: 580px; margin-bottom: 3rem; line-height: 1.7; }
+
+  .alt-bg { background: var(--dark1); }
+  .alt-bg2 { background: var(--dark2); }
+
+  /* ── PROBLEMS ── */
+  .problems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .problem-card {
+    background: var(--dark2);
+    padding: 1.75rem; display: flex; gap: 1rem; align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .problem-card:hover { background: var(--dark3); }
+  .problem-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .problem-text h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--white); }
+  .problem-text p { font-size: 0.825rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── SERVICES ── */
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .service-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--blue));
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .service-card:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .service-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 1rem; color: var(--white); }
+  .service-list { list-style: none; }
+  .service-list li {
+    font-size: 0.85rem; color: var(--muted); padding: 0.3rem 0;
+    padding-left: 1.2rem; position: relative; line-height: 1.5;
+  }
+  .service-list li::before { content: '›'; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+
+  /* ── WHO ── */
+  .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .who-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  .who-card:hover { border-color: var(--blue); background: var(--blueL); transform: translateY(-2px); }
+  .who-card .icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+  .who-card h4 { font-size: 0.925rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--white); }
+  .who-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── RESULTS BANNER ── */
+  .results {
+    background: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(59,130,246,0.06) 100%);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 4rem 2.5rem;
+  }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2rem; text-align: center; max-width: 1100px; margin: 0 auto; }
+  .result-item .num { font-size: 2.75rem; font-weight: 900; color: var(--orange); line-height: 1; letter-spacing: -0.03em; }
+  .result-item .lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.5rem; }
+
+  /* ── PROJECTS ── */
+  .project-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2.5rem;
+    margin-bottom: 1.75rem; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .project-card::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(249,115,22,0.02) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .project-card:hover { border-color: var(--orangeB); box-shadow: 0 8px 48px rgba(249,115,22,0.08); }
+  .project-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--border); }
+  .project-industry { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); font-weight: 800; margin-bottom: 0.5rem; }
+  .project-meta h3 { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; color: var(--white); }
+  .project-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+  .project-nodes {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--blueL); border: 1px solid var(--blueB);
+    color: var(--blue3); padding: 0.4rem 0.9rem;
+    border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+    white-space: nowrap; height: fit-content;
+  }
+  .project-body { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  @media (max-width: 768px) { .project-body { grid-template-columns: 1fr; } }
+  .project-section h4 {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--dim); font-weight: 800; margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .project-section p { font-size: 0.875rem; color: var(--light); line-height: 1.75; margin-bottom: 1.25rem; }
+  .project-section ul { list-style: none; margin-bottom: 1.25rem; }
+  .project-section ul li {
+    font-size: 0.85rem; color: var(--muted);
+    padding: 0.3rem 0; padding-left: 1.25rem; position: relative; line-height: 1.6;
+  }
+  .project-section ul li::before { content: '✓'; position: absolute; left: 0; color: var(--orange); font-size: 0.75rem; font-weight: 700; top: 0.35rem; }
+
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .metric-box {
+    background: var(--dark1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.1rem; text-align: center;
+    transition: border-color 0.2s;
+  }
+  .metric-box:hover { border-color: var(--orangeB); }
+  .metric-val { font-size: 1.4rem; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; }
+  .metric-lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.25rem; }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+
+  .process-flow { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin-bottom: 1.25rem; }
+  .flow-step {
+    background: var(--dark1); border: 1px solid var(--border);
+    color: var(--light); padding: 0.3rem 0.7rem;
+    border-radius: 6px; font-size: 0.775rem; font-weight: 600;
+  }
+  .flow-arrow { color: var(--orange); font-size: 0.8rem; font-weight: 700; }
+
+  .coming-soon { border-style: dashed; border-color: var(--border2); opacity: 0.75; }
+  .coming-badge {
+    display: inline-block;
+    background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
+    color: #fbbf24; padding: 0.3rem 0.8rem; border-radius: 6px;
+    font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem;
+  }
+
+  /* ── BADGES / TAGS ── */
+  .badge {
+    padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.775rem; font-weight: 600;
+    border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--light);
+  }
+  .badge.orange { background: var(--orangeL); border-color: var(--orangeB); color: var(--orange3); }
+  .badge.blue { background: var(--blueL); border-color: var(--blueB); color: var(--blue3); }
+  .tag {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    color: var(--dim); padding: 0.25rem 0.65rem;
+    border-radius: 5px; font-size: 0.72rem; font-weight: 500;
+  }
+
+  /* ── APPROACH ── */
+  .approach-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .step-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem; position: relative;
+    transition: all 0.2s;
+  }
+  .step-card:hover { border-color: var(--orangeB); transform: translateY(-2px); }
+  .step-num {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--orange), var(--orange2));
+    color: var(--white); font-weight: 900; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(249,115,22,0.3);
+  }
+  .step-card h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.75rem; color: var(--white); }
+  .step-card ul { list-style: none; }
+  .step-card ul li {
+    font-size: 0.825rem; color: var(--muted);
+    padding: 0.25rem 0; padding-left: 1rem; position: relative; line-height: 1.5;
+  }
+  .step-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--orange); }
+
+  /* ── TECH ── */
+  .tech-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+  .tech-group h4 {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--muted); margin-bottom: 0.9rem; font-weight: 800;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .tech-badges { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+  /* ── SECURITY ── */
+  .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .security-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s;
+  }
+  .security-item:hover { border-color: var(--blueB); }
+  .security-item .icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--blueL); border: 1px solid var(--blueB);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .security-item h4 { font-size: 0.875rem; font-weight: 800; margin-bottom: 0.3rem; color: var(--white); }
+  .security-item p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── CONTACT ── */
+  .contact-wrap { max-width: 760px; margin: 0 auto; text-align: center; }
+  .contact-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2.5rem 0; }
+  .contact-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    text-decoration: none; color: var(--text);
+    transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  .contact-card:hover { border-color: var(--orange); background: var(--orangeL); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(249,115,22,0.15); }
+  .contact-card .icon { font-size: 1.75rem; }
+  .contact-card .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .contact-card .value { font-size: 0.875rem; font-weight: 700; color: var(--white); }
+  .contact-note { font-size: 0.8rem; color: var(--muted); margin-top: 1.5rem; }
+  .contact-note a { color: var(--orange); text-decoration: none; }
+  .contact-note a:hover { color: var(--orange3); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark1); border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem; text-align: center;
+    font-size: 0.78rem; color: var(--dim);
+  }
+  footer a { color: var(--dim); text-decoration: none; transition: color 0.2s; }
+  footer a:hover { color: var(--orange); }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+
+  /* ── ABOUT ── */
+  .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+  @media (max-width: 768px) { .about-wrap { grid-template-columns: 1fr; } }
+  .about-statement {
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: var(--white); line-height: 1.75; font-weight: 500;
+    border-left: 3px solid var(--orange); padding-left: 1.5rem;
+  }
+  .about-detail { font-size: 0.925rem; color: var(--light); line-height: 1.85; }
+
+  /* ── HERO RESULTS ── */
+  .hero-results { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem 2rem; }
+  .hero-result-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.825rem; color: var(--light); font-weight: 500;
+  }
+  .hero-result-item::before { content: '✓'; color: var(--orange); font-weight: 900; font-size: 0.9rem; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); }
+
+  /* ── BRAND LOGO ── */
+  .brand-logo-wrap { margin-bottom: 1.5rem; }
+  .brand-logo { height: 72px; width: auto; border-radius: 14px; display: block; }
+  .brand-logo-center { height: 80px; width: auto; border-radius: 14px; display: block; margin: 0 auto 2rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.25rem; }
+    .hero { padding: 95px 1.25rem 3.5rem; }
+    .hero-stats { width: 100%; }
+    .hero-stat { padding: 1rem 1.25rem; flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <span class="brand-right">Right</span>
+    <span class="brand-thurr">Thurr</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="services.html">For Businesses →</a></li>
+  </ul>
+  <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="nav-cta">Book Free Audit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="available-badge">
+      <span class="available-dot"></span>
+      Available for new projects
+    </div>
+    <h1>
+      <span class="name">Therrance Carrothers</span><br>
+      <span class="agency">Thurr Solutions</span>
+    </h1>
+    <p class="hero-title">AI Automation Consultant &nbsp;·&nbsp; Business Process Optimization &nbsp;·&nbsp; Intelligent Workflow Systems</p>
+    <p class="hero-value">
+      Businesses lose time and revenue to repetitive manual processes.<br>
+      <strong>Thurr Solutions designs intelligent automation systems</strong> that streamline operations, accelerate sales workflows, and help growing companies scale without adding headcount.
+    </p>
+    <div class="hero-actions">
+      <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="btn-primary">Book a Free Workflow Audit →</a>
+      <a href="#projects" class="btn-secondary">View Case Studies ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">$1,280/mo</div>
+        <div class="hero-stat-label">Net Monthly Benefit</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">16 days</div>
+        <div class="hero-stat-label">Avg Payback</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">87%</div>
+        <div class="hero-stat-label">Less Manual Work</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">20+ hrs</div>
+        <div class="hero-stat-label">Automated Monthly</div>
+      </div>
+    </div>
+    <div class="hero-results">
+      <span class="hero-result-item">70–87% reduction in manual processing time</span>
+      <span class="hero-result-item">15–20 hours automated per month</span>
+      <span class="hero-result-item">4–6 week average payback period</span>
+      <span class="hero-result-item">Near-zero error rates in automated processes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <h2 class="section-title">Who I Am</h2>
+    <div class="about-wrap">
+      <p class="about-statement">I specialize in designing scalable automation systems across revenue operations, sales workflows, and client onboarding. My background in Finance gives me a different lens than most automation builders — I look at your P&L first, find where manual labor is eating your margin, and engineer it out of existence.</p>
+      <p class="about-detail">My approach combines business process analysis, ROI estimation, AI integration, and long-term system reliability. I work with growing businesses ready to replace manual workflows with intelligent systems that drive measurable outcomes — not just implement tools.<br><br>Every engagement starts with a workflow audit. Before I write a single line of automation, I identify exactly where the time is going, what it's costing, and what the system needs to do to eliminate it. The result is automation that pays for itself fast — and keeps running reliably.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMS -->
+<section class="alt-bg" id="problems">
+  <div class="section-inner">
+    <div class="section-label">Why Businesses Come To Me</div>
+    <h2 class="section-title">Sound Familiar?</h2>
+    <p class="section-sub">If your team is stuck doing any of these, automation can fix it — fast.</p>
+    <div class="problems-grid">
+      <div class="problem-card"><div class="problem-icon">⏱️</div><div class="problem-text"><h4>Too much time on repetitive tasks</h4><p>Your team spends hours on work a system could handle in minutes</p></div></div>
+      <div class="problem-card"><div class="problem-icon">🐌</div><div class="problem-text"><h4>Slow lead response times</h4><p>Qualified prospects go cold before your team follows up</p></div></div>
+      <div class="problem-card"><div class="problem-icon">📋</div><div class="problem-text"><h4>Proposals taking too long</h4><p>Losing deals to competitors who respond faster</p></div></div>
+      <div class="problem-card"><div class="problem-icon">🔀</div><div class="problem-text"><h4>Disconnected tools</h4><p>Manual copy-paste between systems that should talk to each other</p></div></div>
+      <div class="problem-card"><div class="problem-icon">📊</div><div class="problem-text"><h4>No visibility into KPIs</h4><p>Running operations blind with no real-time performance data</p></div></div>
+      <div class="problem-card"><div class="problem-icon">📈</div><div class="problem-text"><h4>Can't scale without hiring</h4><p>Growth requires better systems — not more headcount</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section id="who">
+  <div class="section-inner">
+    <div class="section-label">Who This Is For</div>
+    <h2 class="section-title">Built for Growing Businesses</h2>
+    <p class="section-sub">I work with SMBs ready to stop doing things manually and start building systems that scale.</p>
+    <div class="who-grid">
+      <div class="who-card"><div class="icon">🏠</div><h4>Roofing & Construction</h4><p>Storm season is peak — your proposal and lead intake should run automatically</p></div>
+      <div class="who-card"><div class="icon">📡</div><h4>B2B Sales Teams</h4><p>Spending too much time researching leads instead of closing them</p></div>
+      <div class="who-card"><div class="icon">🏢</div><h4>Service-Based SMBs</h4><p>Operational work that should be automated but hasn't been yet</p></div>
+      <div class="who-card"><div class="icon">🚀</div><h4>Growing Companies</h4><p>Want to scale operations without increasing headcount or complexity</p></div>
+      <div class="who-card"><div class="icon">🗺️</div><h4>Automation-Ready Businesses</h4><p>Know they need to automate but aren't sure where to start</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="alt-bg" id="services">
+  <div class="section-inner">
+    <div class="section-label">What I Build</div>
+    <h2 class="section-title">Core Services</h2>
+    <p class="section-sub">Every system is designed around your business outcomes — not just the tools.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">📈</div>
+        <h3>Revenue Operations Automation</h3>
+        <p style="font-size:0.85rem;color:var(--light);margin-bottom:1rem;line-height:1.6;">Accelerate your sales pipeline and improve lead quality without adding headcount — so your team focuses on closing, not data entry.</p>
+        <ul class="service-list">
+          <li>AI lead qualification and scoring</li>
+          <li>CRM data automation</li>
+          <li>Sales pipeline dashboards</li>
+          <li>Intelligent lead routing systems</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💰</div>
+        <h3>Finance & Admin Automation</h3>
+        <p style="font-size:0.85rem;color:var(--light);margin-bottom:1rem;line-height:1.6;">Cut proposal and contract turnaround from days to minutes — eliminating manual errors and letting your team win jobs faster than the competition.</p>
+        <ul class="service-list">
+          <li>Sales proposal generation</li>
+          <li>Contract workflow automation</li>
+          <li>Document processing and delivery</li>
+          <li>Client onboarding workflows</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎧</div>
+        <h3>Customer Support Automation</h3>
+        <p style="font-size:0.85rem;color:var(--light);margin-bottom:1rem;line-height:1.6;">Respond to clients instantly, route every request to the right person, and never miss a follow-up — even when your team is off the clock.</p>
+        <ul class="service-list">
+          <li>AI knowledge assistants</li>
+          <li>24/7 monitoring systems</li>
+          <li>Ticket classification and routing</li>
+          <li>Automated follow-up sequences</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results">
+  <div class="results-grid">
+    <div class="result-item"><div class="num">20+</div><div class="lbl">Hours Automated Monthly</div></div>
+    <div class="result-item"><div class="num">87%</div><div class="lbl">Reduction in Manual Work</div></div>
+    <div class="result-item"><div class="num">16 days</div><div class="lbl">Average Payback Period</div></div>
+    <div class="result-item"><div class="num">668%</div><div class="lbl">First-Year ROI</div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-label">Case Studies</div>
+    <h2 class="section-title">Real Systems. Real Results.</h2>
+    <p class="section-sub">Every project shows the business problem, the system I designed, and the measured outcomes.</p>
+
+    <!-- P1 -->
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-meta">
+          <div class="project-industry">B2B Sales · Telecom · Revenue Operations</div>
+          <h3>Telecom Lead Intelligence Engine</h3>
+          <div class="project-badges">
+            <span class="badge orange">AI Scoring</span>
+            <span class="badge blue">Email Validation</span>
+            <span class="badge">Web Enrichment</span>
+            <span class="badge">Slack Alerts</span>
+          </div>
+        </div>
+        <div class="project-nodes">⚙ 29 nodes · n8n</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section">
+          <h4>Business Problem</h4>
+          <p>SDRs spent 15 minutes per lead manually verifying emails, researching companies, scoring ICP fit, and updating spreadsheets. At 100 leads per month — 25 hours of SDR time wasted on data entry, costing $875/month with no consistency, no audit trail, and 15–20% invalid emails reaching outreach.</p>
+          <h4>As-Is Process</h4>
+          <p>SDRs manually verified emails, researched companies via LinkedIn and Google, scored ICP fit in spreadsheets, then updated tracking sheets and notified sales via ad-hoc Slack messages — creating inconsistent data quality and a 15-minute time sink per lead.</p>
+          <h4>Automated Process</h4>
+          <div class="process-flow">
+            <span class="flow-step">Daily Trigger</span><span class="flow-arrow">→</span>
+            <span class="flow-step">ICP Filter</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Email Verify</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Web Research</span><span class="flow-arrow">→</span>
+            <span class="flow-step">AI Score</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Slack Alert</span>
+          </div>
+          <h4>Key Features</h4>
+          <ul>
+            <li>ICP pre-filter eliminates API cost for bad leads upfront</li>
+            <li>Bouncer email validation at 90+ confidence threshold</li>
+            <li>Tavily AI web research enriches every qualified lead</li>
+            <li>OpenRouter LLM scores leads 0–100 with written reasoning</li>
+            <li>Full audit trail written to Google Sheets automatically</li>
+            <li>Real-time monitoring dashboard with error logging</li>
+          </ul>
+        </div>
+        <div class="project-section">
+          <h4>Results</h4>
+          <div class="metrics-grid">
+            <div class="metric-box"><div class="metric-val">668%</div><div class="metric-lbl">First-Year ROI</div></div>
+            <div class="metric-box"><div class="metric-val">16 days</div><div class="metric-lbl">Payback Period</div></div>
+            <div class="metric-box"><div class="metric-val">$1,280</div><div class="metric-lbl">Monthly Net Benefit</div></div>
+            <div class="metric-box"><div class="metric-val">−87%</div><div class="metric-lbl">Time Per Lead</div></div>
+          </div>
+          <ul>
+            <li>15 min per lead → under 2 minutes (−87%)</li>
+            <li>4 leads/hr → 30 leads/hr (+650%)</li>
+            <li>Invalid outreach: 15–20% → &lt;2% (−90%)</li>
+            <li>Cost per lead: $8.75 → $1.17 (−87%)</li>
+            <li>SDR hours/month: 25 hrs → 3 hrs (−88%)</li>
+            <li>Sales alert time: same day → under 2 minutes</li>
+          </ul>
+          <h4 style="margin-top:1.25rem">Stack</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem">
+            <span class="badge orange">n8n</span>
+            <span class="badge">Bouncer.io</span>
+            <span class="badge">Tavily AI</span>
+            <span class="badge blue">OpenRouter</span>
+            <span class="badge">Google Sheets</span>
+            <span class="badge">Slack</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-tags">
+        <span class="tag">B2B Sales</span><span class="tag">Revenue Operations</span>
+        <span class="tag">Lead Qualification</span><span class="tag">AI Integration</span>
+        <span class="tag">Cost Reduction</span><span class="tag">Process Optimization</span>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-meta">
+          <div class="project-industry">Roofing · Construction · Sales Automation</div>
+          <h3>Proposal & Contract Automation Engine</h3>
+          <div class="project-badges">
+            <span class="badge orange">Auto-Generated Docs</span>
+            <span class="badge blue">Contract Delivery</span>
+            <span class="badge">CRM Update</span>
+            <span class="badge">Slack Alerts</span>
+          </div>
+        </div>
+        <div class="project-nodes">⚙ 18 nodes · n8n</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section">
+          <h4>Business Problem</h4>
+          <p>A regional roofing contractor was manually copying client details into proposal templates, calculating pricing by hand, and emailing contracts individually. During storm season with 15–20 active inquiries per week, turnaround stretched to 24–48 hours — and in roofing, the first company to get a branded proposal in the homeowner's hands wins the job. Slow proposals were costing them contracts.</p>
+          <h4>Automated Process</h4>
+          <div class="process-flow">
+            <span class="flow-step">Job Intake</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Data Extract</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Proposal Gen</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Contract Create</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Email Client</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Notify Sales</span>
+          </div>
+          <h4>Key Features</h4>
+          <ul>
+            <li>Auto-populates proposal from intake form data</li>
+            <li>Generates branded contract with all terms pre-filled</li>
+            <li>Delivers documents to client via email automatically</li>
+            <li>Updates CRM tracking sheet without manual entry</li>
+            <li>Notifies sales team instantly with full client details</li>
+          </ul>
+        </div>
+        <div class="project-section">
+          <h4>Results</h4>
+          <div class="metrics-grid">
+            <div class="metric-box"><div class="metric-val">&lt;10 min</div><div class="metric-lbl">Turnaround Time</div></div>
+            <div class="metric-box"><div class="metric-val">0</div><div class="metric-lbl">Copy-Paste Errors</div></div>
+            <div class="metric-box"><div class="metric-val">−99%</div><div class="metric-lbl">Proposal Delay</div></div>
+            <div class="metric-box"><div class="metric-val">8–10 hrs</div><div class="metric-lbl">Saved Monthly</div></div>
+          </div>
+          <ul>
+            <li>Proposal turnaround: 24–48 hrs → under 10 minutes</li>
+            <li>Copy-paste errors eliminated completely</li>
+            <li>Sales team freed from document prep during storm season</li>
+            <li>Faster response rate reduces competitor loss</li>
+            <li>Scales with volume — no extra staff needed at peak</li>
+          </ul>
+          <h4 style="margin-top:1.25rem">Stack</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem">
+            <span class="badge orange">n8n</span>
+            <span class="badge">Google Sheets</span>
+            <span class="badge blue">Doc Generation</span>
+            <span class="badge">Email Delivery</span>
+            <span class="badge">Slack</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Home Services</span><span class="tag">Roofing</span>
+        <span class="tag">Sales Automation</span><span class="tag">Document Generation</span>
+        <span class="tag">Revenue Operations</span>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-meta">
+          <div class="project-industry">Roofing · Construction · Client Operations</div>
+          <h3>Client Onboarding Automation Engine</h3>
+          <div class="project-badges">
+            <span class="badge orange">Welcome Automation</span>
+            <span class="badge blue">Drive Folder Setup</span>
+            <span class="badge">CRM Creation</span>
+            <span class="badge">Slack Alerts</span>
+          </div>
+        </div>
+        <div class="project-nodes">⚙ n8n · Google Drive · Airtable</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section">
+          <h4>Business Problem</h4>
+          <p>After a roofing contract was signed, office staff manually emailed welcome packets, created Drive folders by hand, texted project managers, and logged client info into spreadsheets — taking 60–90 minutes per new client and creating frequent data entry errors across systems.</p>
+          <h4>As-Is Process</h4>
+          <p>Office staff manually emailed welcome packets, created Drive folders by hand, texted project managers, and logged client info into spreadsheets — creating frequent data entry errors and consuming 60–90 minutes per new client.</p>
+          <h4>Automated Process</h4>
+          <div class="process-flow">
+            <span class="flow-step">Contract Signed</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Welcome Email</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Drive Folders</span><span class="flow-arrow">→</span>
+            <span class="flow-step">CRM Record</span><span class="flow-arrow">→</span>
+            <span class="flow-step">PM Alert</span><span class="flow-arrow">→</span>
+            <span class="flow-step">Follow-up Scheduled</span>
+          </div>
+          <h4>Key Features</h4>
+          <ul>
+            <li>Triggers automatically on contract signed webhook or form submission</li>
+            <li>Sends welcome email + branded PDF packet to client instantly</li>
+            <li>Creates Google Drive folder structure (Contract, Photos, Invoices, Permits)</li>
+            <li>Creates client record in Airtable CRM with all job details populated</li>
+            <li>Notifies project manager via Slack with full job summary</li>
+            <li>Schedules 3-day follow-up check-in email automatically</li>
+          </ul>
+        </div>
+        <div class="project-section">
+          <h4>Results</h4>
+          <div class="metrics-grid">
+            <div class="metric-box"><div class="metric-val">&lt;2 min</div><div class="metric-lbl">Onboarding Time</div></div>
+            <div class="metric-box"><div class="metric-val">~5 wks</div><div class="metric-lbl">Payback Period</div></div>
+            <div class="metric-box"><div class="metric-val">$547/mo</div><div class="metric-lbl">Net Benefit</div></div>
+            <div class="metric-box"><div class="metric-val">742%</div><div class="metric-lbl">First-Year ROI</div></div>
+          </div>
+          <ul>
+            <li>Onboarding time: 60–90 minutes → under 2 minutes per client</li>
+            <li>Manual data entry errors eliminated across Drive, CRM, and Slack</li>
+            <li>Project managers notified in real time — no missed handoffs</li>
+            <li>Follow-up never forgotten — scheduled automatically at contract signing</li>
+            <li>Scales with volume — handles 15+ new clients/month without added staff</li>
+          </ul>
+          <h4 style="margin-top:1.25rem">Stack</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem">
+            <span class="badge orange">n8n</span>
+            <span class="badge blue">Google Drive API</span>
+            <span class="badge">Airtable</span>
+            <span class="badge">Gmail / SendGrid</span>
+            <span class="badge">Slack</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Home Services</span><span class="tag">Roofing</span>
+        <span class="tag">Client Onboarding</span><span class="tag">CRM Automation</span>
+        <span class="tag">Document Management</span><span class="tag">Operations</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section class="alt-bg" id="approach">
+  <div class="section-inner">
+    <div class="section-label">How I Work</div>
+    <h2 class="section-title">My Approach</h2>
+    <p class="section-sub">Every engagement follows the same proven process — from audit to live system.</p>
+    <div class="approach-steps">
+      <div class="step-card"><div class="step-num">1</div><h4>Discovery & Workflow Audit</h4><ul><li>Map the current process end-to-end</li><li>Identify bottlenecks and error points</li><li>Define KPIs and success metrics</li><li>Estimate ROI before building anything</li></ul></div>
+      <div class="step-card"><div class="step-num">2</div><h4>Strategy Design</h4><ul><li>Design the automated To-Be system</li><li>Define integration architecture</li><li>Address security and access controls</li><li>Plan monitoring and error handling</li></ul></div>
+      <div class="step-card"><div class="step-num">3</div><h4>Build & Integration</h4><ul><li>Workflow implementation in n8n</li><li>AI model integration and prompting</li><li>API connections and data flow</li><li>Monitoring setup from day one</li></ul></div>
+      <div class="step-card"><div class="step-num">4</div><h4>Testing & Optimization</h4><ul><li>Edge case validation</li><li>Performance testing under load</li><li>Error path verification</li><li>Continuous optimization loop</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section id="tech">
+  <div class="section-inner">
+    <div class="section-label">Technology</div>
+    <h2 class="section-title">Tech Stack</h2>
+    <p class="section-sub">Tools I work with daily — grouped by function, not by hype.</p>
+    <div class="tech-groups">
+      <div class="tech-group"><h4>Workflow Automation</h4><div class="tech-badges"><span class="badge orange">n8n</span><span class="badge">Zapier</span><span class="badge">Make</span></div></div>
+      <div class="tech-group"><h4>AI & LLM</h4><div class="tech-badges"><span class="badge blue">OpenRouter</span><span class="badge">OpenAI</span><span class="badge">Tavily AI</span></div></div>
+      <div class="tech-group"><h4>CRM & Data</h4><div class="tech-badges"><span class="badge">Google Sheets</span><span class="badge">Airtable</span><span class="badge">HubSpot</span></div></div>
+      <div class="tech-group"><h4>APIs & Integrations</h4><div class="tech-badges"><span class="badge">REST APIs</span><span class="badge">Webhooks</span><span class="badge">OAuth</span><span class="badge">Bouncer</span></div></div>
+      <div class="tech-group"><h4>Monitoring</h4><div class="tech-badges"><span class="badge orange">Error Logging</span><span class="badge">Slack Alerts</span><span class="badge">24/7 Uptime</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section class="alt-bg">
+  <div class="section-inner">
+    <div class="section-label">Trust & Reliability</div>
+    <h2 class="section-title">Built to Run in Production</h2>
+    <p class="section-sub">Every system includes production-grade reliability, security, and monitoring from day one.</p>
+    <div class="security-grid">
+      <div class="security-item"><div class="icon">🔐</div><div><h4>Secure Authentication</h4><p>All API keys managed through credential storage — never hardcoded in workflows</p></div></div>
+      <div class="security-item"><div class="icon">🛡️</div><div><h4>Input Validation</h4><p>Data sanitized and validated at every system entry point</p></div></div>
+      <div class="security-item"><div class="icon">📡</div><div><h4>24/7 Error Monitoring</h4><p>Automated alerts fire immediately when anything in the system fails</p></div></div>
+      <div class="security-item"><div class="icon">📋</div><div><h4>Full Audit Trail</h4><p>Every decision logged with timestamp, reasoning, and execution ID</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-wrap">
+      <img src="right%20thurr%20logo-11.png" alt="Right Thurr" class="brand-logo-center">
+      <div class="section-label" style="text-align:center">Let's Talk</div>
+      <h2 class="section-title" style="text-align:center">Ready to Automate?</h2>
+      <p style="font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:0.75rem;letter-spacing:0.04em;">📍 Houston, TX &nbsp;·&nbsp; Available Remotely Worldwide</p>
+      <p class="section-sub" style="text-align:center;margin:0 auto 0">Book a free workflow audit — I'll identify exactly where automation delivers the most value for your business.</p>
+      <div class="contact-cards">
+        <a href="https://calendly.com/carrothers-therrance28" target="_blank" class="contact-card">
+          <div class="icon">📅</div>
+          <div class="label">Book a Call</div>
+          <div class="value">Free Workflow Audit</div>
+        </a>
+        <a href="https://www.linkedin.com/in/therrancecarrothers" target="_blank" class="contact-card">
+          <div class="icon">💼</div>
+          <div class="label">LinkedIn</div>
+          <div class="value">Therrance Carrothers</div>
+        </a>
+        <a href="mailto:therrance@thurrsolutions.com" class="contact-card">
+          <div class="icon">✉️</div>
+          <div class="label">Email</div>
+          <div class="value">therrance@thurrsolutions.com</div>
+        </a>
+      </div>
+      <p class="contact-note">
+        Houston, TX &amp; St. Louis, MO · Available remotely worldwide<br>
+        <a href="https://www.linkedin.com/in/therrancecarrothers" target="_blank">linkedin.com/in/therrancecarrothers</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 <a href="#">Thurr Solutions</a> · Therrance Carrothers</span>
+    <span>AI Automation Consulting · Houston, TX &amp; St. Louis, MO</span>
+    <span>Available Remotely Worldwide</span>
+  </div>
+</footer>
+
+</body>
+</html>

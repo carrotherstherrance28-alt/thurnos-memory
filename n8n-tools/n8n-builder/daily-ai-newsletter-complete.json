@@ -1,0 +1,346 @@
+{
+  "name": "Daily AI Newsletter - OpenRouter",
+  "nodes": [
+    {
+      "id": "sticky-header",
+      "name": "📧 DAILY AI NEWSLETTER",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {
+        "height": 140,
+        "width": 1400,
+        "color": 5,
+        "content": "## 📧 Daily AI Newsletter Automation\n\n**Schedule**: 7 AM Central Time  |  **Research Agent**: GPT-4o via OpenRouter + Perplexity Search  |  **Newsletter Writer**: Claude 3.5 Sonnet via OpenRouter  |  **Delivery**: Gmail"
+      }
+    },
+    {
+      "id": "sticky-trigger",
+      "name": "🕐 TRIGGER",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 180],
+      "parameters": {
+        "height": 280,
+        "width": 280,
+        "color": 3,
+        "content": "## 🕐 TRIGGER\n\n**Node**: Schedule Trigger\n\n**When**: Daily at 7:00 AM\n\n**Timezone**: America/Chicago (Central)\n\n**Cron**: `0 7 * * *`"
+      }
+    },
+    {
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [100, 320],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sticky-research",
+      "name": "🔍 RESEARCH AGENT",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [320, 180],
+      "parameters": {
+        "height": 500,
+        "width": 480,
+        "color": 4,
+        "content": "## 🔍 RESEARCH AGENT\n\n**Purpose**: Find latest AI news\n\n---\n\n**AI Agent Node**\n- Prompt: Research AI automation, voice agents, workflows\n- Reasoning: Decides when to search\n\n**Chat Model** (ai_languageModel)\n- OpenRouter GPT-4o\n- Temperature: 0.7\n\n**Search Tool** (ai_tool)\n- Perplexity/SerpApi\n- Searches web for latest news\n\n---\n\n**Output**: Comprehensive research summary"
+      }
+    },
+    {
+      "id": "research-agent",
+      "name": "Research Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [480, 320],
+      "parameters": {
+        "promptType": "define",
+        "text": "Research the latest developments in AI automation, voice agents, and agentic workflows from the past 24-48 hours. Use the search tool to find current news. Focus on: new AI tools and platforms, voice agent technologies, workflow automation trends, API integrations, and practical business use cases. Provide a detailed summary with specific examples and key takeaways for an AI automation agency."
+      }
+    },
+    {
+      "id": "openrouter-gpt4",
+      "name": "OpenRouter GPT-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [560, 500],
+      "parameters": {
+        "model": "openai/gpt-4o",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 2000
+        }
+      }
+    },
+    {
+      "id": "perplexity-search",
+      "name": "Perplexity Search",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1.1,
+      "position": [560, 620],
+      "parameters": {
+        "toolDescription": "Search the web for the latest AI automation, voice agent, and agentic workflow news from the past 24-48 hours. Use this to find recent developments, new tools, announcements, and industry trends."
+      }
+    },
+    {
+      "id": "sticky-writer",
+      "name": "✍️ NEWSLETTER WRITER",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [840, 180],
+      "parameters": {
+        "height": 500,
+        "width": 480,
+        "color": 6,
+        "content": "## ✍️ NEWSLETTER WRITER\n\n**Purpose**: Create HTML newsletter\n\n---\n\n**AI Agent Node**\n- Prompt: Write professional newsletter\n- hasOutputParser: true\n\n**Chat Model** (ai_languageModel)\n- OpenRouter Claude 3.5 Sonnet\n- Temperature: 0.8\n\n**JSON Parser** (ai_outputParser)\n- Enforces output format\n- Schema: {subject, html}\n\n---\n\n**Output**: JSON with subject line and HTML email"
+      }
+    },
+    {
+      "id": "newsletter-writer",
+      "name": "Newsletter Writer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [1000, 320],
+      "parameters": {
+        "promptType": "define",
+        "text": "Based on the research provided, create a professional HTML newsletter about the latest AI automation and voice agent developments. Your output MUST be valid JSON with exactly two fields:\n\n1. \"subject\": A catchy, engaging email subject line (50-80 characters)\n\n2. \"html\": A complete HTML email with:\n   - Inline CSS styling (no external stylesheets)\n   - Professional header with newsletter title\n   - Brief intro paragraph\n   - 3-5 main news sections with headers\n   - Bullet points for key insights\n   - Actionable takeaways section\n   - Professional footer\n   - Mobile-responsive design\n   - Clean, modern styling",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "openrouter-claude",
+      "name": "OpenRouter Claude",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [1080, 500],
+      "parameters": {
+        "model": "anthropic/claude-3.5-sonnet",
+        "options": {
+          "temperature": 0.8,
+          "maxTokens": 4000
+        }
+      }
+    },
+    {
+      "id": "json-parser",
+      "name": "JSON Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [1080, 620],
+      "parameters": {
+        "jsonSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"subject\": {\n      \"type\": \"string\",\n      \"description\": \"Email subject line\"\n    },\n    \"html\": {\n      \"type\": \"string\",\n      \"description\": \"Complete HTML newsletter with inline CSS\"\n    }\n  },\n  \"required\": [\"subject\", \"html\"]\n}"
+      }
+    },
+    {
+      "id": "sticky-delivery",
+      "name": "📬 DELIVERY",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1360, 180],
+      "parameters": {
+        "height": 280,
+        "width": 300,
+        "color": 7,
+        "content": "## 📬 DELIVERY\n\n**Node**: Gmail\n\n**To**: ctherrance@gmail.com\n\n**Subject**: From AI output\n\n**Body**: HTML newsletter\n\n**Type**: HTML email"
+      }
+    },
+    {
+      "id": "send-gmail",
+      "name": "Send Newsletter",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [1460, 320],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "ctherrance@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "sticky-error",
+      "name": "⚠️ ERROR HANDLER",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 720],
+      "parameters": {
+        "height": 200,
+        "width": 600,
+        "color": 2,
+        "content": "## ⚠️ ERROR HANDLER\n\n**Error Trigger**: Catches any workflow failure\n\n**Log Error**: Captures workflow name, error message, failed node, and timestamp\n\n**Extend**: Add Slack/Email notification here to alert on failures"
+      }
+    },
+    {
+      "id": "error-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [100, 820],
+      "parameters": {}
+    },
+    {
+      "id": "error-log",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [300, 820],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "workflow",
+              "value": "Daily AI Newsletter",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "error",
+              "value": "={{ $json.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "node",
+              "value": "={{ $json.error.node.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "time",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "setup-guide",
+      "name": "📋 SETUP GUIDE",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1700, 0],
+      "parameters": {
+        "height": 920,
+        "width": 420,
+        "color": 1,
+        "content": "## 📋 SETUP GUIDE\n\n---\n\n### Step 1: OpenRouter API\n**Nodes**: OpenRouter GPT-4o, OpenRouter Claude\n\n1. Go to: **openrouter.ai/keys**\n2. Sign in / Create account\n3. Click \"Create Key\"\n4. Copy key (starts with `sk-or-v1-...`)\n5. Go to: **openrouter.ai/credits**\n6. Add $5-10 credits\n7. In n8n: Click node → Credential → Create New → Paste key\n\n⚠️ **Use SAME credential for BOTH OpenRouter nodes!**\n\n---\n\n### Step 2: SerpApi (Search)\n**Node**: Perplexity Search\n\n1. Go to: **serpapi.com**\n2. Click \"Register\" (free tier)\n3. Go to: **serpapi.com/manage-api-key**\n4. Copy your API key\n5. In n8n: Click node → Credential → Create New → Paste key\n\n✅ Free tier = 100 searches/month\n\n---\n\n### Step 3: Gmail OAuth2\n**Node**: Send Newsletter\n\n1. Click the \"Send Newsletter\" node\n2. Click \"Credential to connect with\"\n3. Click \"Create New\"\n4. Select \"Gmail OAuth2 API\"\n5. Click \"Connect my account\"\n6. Sign in with Google\n7. Click \"Allow\" for permissions\n8. Save\n\n---\n\n### Step 4: Test Workflow\n\n1. Click \"Execute Workflow\" button\n2. Watch each node turn green ✅\n3. Check your inbox for the newsletter\n\n---\n\n### Step 5: Activate\n\n1. Toggle \"Active\" switch (top right)\n2. Workflow runs automatically at 7 AM Central\n\n---\n\n### 💰 Monthly Cost\n\n- OpenRouter: ~$1/month\n- SerpApi: FREE (100/mo)\n- Gmail: FREE\n\n**Total: ~$1/month**"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Newsletter Writer": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Claude": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/Chicago",
+    "saveExecutionProgress": true
+  },
+  "pinData": {},
+  "tags": [],
+  "triggerCount": 2
+}

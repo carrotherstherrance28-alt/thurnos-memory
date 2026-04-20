@@ -1,0 +1,2369 @@
+{
+  "name": "Retell Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "leadcall",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -352,
+        -144
+      ],
+      "id": "b0b3b130-9124-4889-af7e-8e79c8133bfb",
+      "name": "Webhook",
+      "webhookId": "23b053f8-4e2f-4d30-8226-ea4502ad2d47"
+    },
+    {
+      "parameters": {
+        "tableId": "leads",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.body.args.Name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.body.args.Email }}"
+            },
+            {
+              "fieldId": "budget",
+              "fieldValue": "={{ $json.body.args.Budget }}"
+            },
+            {
+              "fieldId": "requests",
+              "fieldValue": "={{ $json.body.args.Requests }}"
+            },
+            {
+              "fieldId": "urgency",
+              "fieldValue": "={{ $json.body.args.Urgency }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now.format('dd/LL/yyyy')}}"
+            },
+            {
+              "fieldId": "company",
+              "fieldValue": "={{ $json.body.args.Company }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -144
+      ],
+      "id": "9c01c367-fad5-4357-ba7b-7c9e492a0149",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "zbr134PxABZheLV6",
+          "name": "Supabase account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-dainamiai-u36679.vm.elestio.app",
+            "x-real-ip": "100.20.5.228",
+            "x-forwarded-for": "100.20.5.228",
+            "x-forwarded-proto": "https",
+            "x-forwarded-port": "443",
+            "connection": "close",
+            "content-length": "27780",
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "x-retell-signature": "v=1765361432224,d=8b1b5aa1ca74659a305f127d86c1a1cad64d88bc8c555f91261057a35166c719",
+            "user-agent": "axios/1.13.2",
+            "accept-encoding": "gzip, compress, deflate, br"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "call": {
+              "call_id": "call_702ba135fe6284b3f6f2bc4e0e6",
+              "call_type": "web_call",
+              "agent_id": "agent_dfa91317eb33cea60d0602f6e3",
+              "agent_version": 1,
+              "agent_name": "Inbound Qualification Agent",
+              "call_status": "ongoing",
+              "start_timestamp": 1765361358425,
+              "transcript": "Agent: Hi, welcome to AI Automation Hub, my name is Sally. What’s your name and what brings you here today?\nUser: Yeah. My name is John, and I'm from a company called AI Euro Estates, and we're looking to find ways automate our marketing processes.\nAgent: Nice to meet you, John! Automating marketing processes sounds like a great way to boost efficiency. Could you tell me a bit more about the specific challenges you're facing with your current marketing setup?\nUser: Yeah. We're just finding a way to increase the production our reels.\nUser: Instagram especially.\nUser: and we're finding ways to automate parts of our screenwriting process.\nAgent: Got it, automating the screenwriting for Instagram reels sounds interesting! When are you ideally hoping to have this automation up and running?\nUser: You're looking at for it to be up before, you know, the year, so in the next three weeks.\nAgent: Thanks for sharing that timeline, John. Just to get a better sense, is there a budget range you are looking at for this project?\nUser: You're on five thousand.\nAgent: Thanks for sharing that, John. Could I also get your email address so I can save your details?\nUser: Yeah. Uh, you can reach me at john at real estate heroes dot com.\n",
+              "transcript_object": [
+                {
+                  "role": "agent",
+                  "content": "Hi, welcome to AI Automation Hub, my name is Sally. What’s your name and what brings you here today?",
+                  "words": [
+                    {
+                      "word": "Hi, ",
+                      "start": 1.301,
+                      "end": 1.545
+                    },
+                    {
+                      "word": "welcome ",
+                      "start": 1.545,
+                      "end": 1.928
+                    },
+                    {
+                      "word": "to ",
+                      "start": 1.928,
+                      "end": 2.079
+                    },
+                    {
+                      "word": "AI ",
+                      "start": 2.079,
+                      "end": 2.334
+                    },
+                    {
+                      "word": "Automation ",
+                      "start": 2.334,
+                      "end": 2.892
+                    },
+                    {
+                      "word": "Hub, ",
+                      "start": 2.892,
+                      "end": 3.194
+                    },
+                    {
+                      "word": "my ",
+                      "start": 3.194,
+                      "end": 3.368
+                    },
+                    {
+                      "word": "name ",
+                      "start": 3.368,
+                      "end": 3.565
+                    },
+                    {
+                      "word": "is ",
+                      "start": 3.565,
+                      "end": 3.681
+                    },
+                    {
+                      "word": "Sally.",
+                      "start": 3.681,
+                      "end": 4.343
+                    },
+                    {
+                      "word": " What’s ",
+                      "start": 4.388916748046875,
+                      "end": 4.644916748046875
+                    },
+                    {
+                      "word": "your ",
+                      "start": 4.644916748046875,
+                      "end": 4.818916748046875
+                    },
+                    {
+                      "word": "name ",
+                      "start": 4.818916748046875,
+                      "end": 5.050916748046875
+                    },
+                    {
+                      "word": "and ",
+                      "start": 5.050916748046875,
+                      "end": 5.190916748046875
+                    },
+                    {
+                      "word": "what ",
+                      "start": 5.190916748046875,
+                      "end": 5.329916748046875
+                    },
+                    {
+                      "word": "brings ",
+                      "start": 5.329916748046875,
+                      "end": 5.549916748046875
+                    },
+                    {
+                      "word": "you ",
+                      "start": 5.549916748046875,
+                      "end": 5.666916748046875
+                    },
+                    {
+                      "word": "here ",
+                      "start": 5.666916748046875,
+                      "end": 5.851916748046875
+                    },
+                    {
+                      "word": "today?",
+                      "start": 5.851916748046875,
+                      "end": 6.432916748046875
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 0
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. My name is John, and I'm from a company called AI Euro Estates, and we're looking to find ways automate our marketing processes.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 7.2429997,
+                      "end": 7.643
+                    },
+                    {
+                      "word": "My ",
+                      "start": 7.643,
+                      "end": 7.803
+                    },
+                    {
+                      "word": "name ",
+                      "start": 7.803,
+                      "end": 7.963
+                    },
+                    {
+                      "word": "is ",
+                      "start": 7.963,
+                      "end": 8.043
+                    },
+                    {
+                      "word": "John, ",
+                      "start": 8.043,
+                      "end": 8.523
+                    },
+                    {
+                      "word": "and ",
+                      "start": 8.523,
+                      "end": 8.763
+                    },
+                    {
+                      "word": "I'm ",
+                      "start": 8.763,
+                      "end": 9.243
+                    },
+                    {
+                      "word": "from ",
+                      "start": 9.243,
+                      "end": 9.562999
+                    },
+                    {
+                      "word": "a ",
+                      "start": 9.562999,
+                      "end": 9.803
+                    },
+                    {
+                      "word": "company ",
+                      "start": 9.803,
+                      "end": 10.283
+                    },
+                    {
+                      "word": "called ",
+                      "start": 10.283,
+                      "end": 10.683
+                    },
+                    {
+                      "word": "AI ",
+                      "start": 10.923,
+                      "end": 11.883000000000001
+                    },
+                    {
+                      "word": "Euro ",
+                      "start": 12.043,
+                      "end": 12.363
+                    },
+                    {
+                      "word": "Estates, ",
+                      "start": 12.363,
+                      "end": 13.003
+                    },
+                    {
+                      "word": "and ",
+                      "start": 13.003,
+                      "end": 13.163
+                    },
+                    {
+                      "word": "we're ",
+                      "start": 13.163,
+                      "end": 13.403
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 13.403,
+                      "end": 13.643
+                    },
+                    {
+                      "word": "to ",
+                      "start": 13.643,
+                      "end": 13.803
+                    },
+                    {
+                      "word": "find ",
+                      "start": 13.803,
+                      "end": 14.283
+                    },
+                    {
+                      "word": "ways ",
+                      "start": 14.283,
+                      "end": 14.523
+                    },
+                    {
+                      "word": "automate ",
+                      "start": 14.693,
+                      "end": 15.093
+                    },
+                    {
+                      "word": "our ",
+                      "start": 15.093,
+                      "end": 15.333001
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 15.333001,
+                      "end": 15.573001
+                    },
+                    {
+                      "word": "processes.",
+                      "start": 15.573001,
+                      "end": 15.973
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Nice to meet you, John! Automating marketing processes sounds like a great way to boost efficiency. Could you tell me a bit more about the specific challenges you're facing with your current marketing setup?",
+                  "words": [
+                    {
+                      "word": "Nice ",
+                      "start": 17.644,
+                      "end": 17.911
+                    },
+                    {
+                      "word": "to ",
+                      "start": 17.911,
+                      "end": 18.016
+                    },
+                    {
+                      "word": "meet ",
+                      "start": 18.016,
+                      "end": 18.201
+                    },
+                    {
+                      "word": "you, ",
+                      "start": 18.201,
+                      "end": 18.364
+                    },
+                    {
+                      "word": "John!",
+                      "start": 18.364,
+                      "end": 18.91
+                    },
+                    {
+                      "word": " Automating ",
+                      "start": 18.921625,
+                      "end": 19.466625
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 19.466625,
+                      "end": 19.838625
+                    },
+                    {
+                      "word": "processes ",
+                      "start": 19.838625,
+                      "end": 20.453625
+                    },
+                    {
+                      "word": "sounds ",
+                      "start": 20.453625,
+                      "end": 20.743625
+                    },
+                    {
+                      "word": "like ",
+                      "start": 20.743625,
+                      "end": 20.894625
+                    },
+                    {
+                      "word": "a ",
+                      "start": 20.894625,
+                      "end": 20.976625
+                    },
+                    {
+                      "word": "great ",
+                      "start": 20.976625,
+                      "end": 21.196625
+                    },
+                    {
+                      "word": "way ",
+                      "start": 21.196625,
+                      "end": 21.335625
+                    },
+                    {
+                      "word": "to ",
+                      "start": 21.335625,
+                      "end": 21.428625
+                    },
+                    {
+                      "word": "boost ",
+                      "start": 21.428625,
+                      "end": 21.719625
+                    },
+                    {
+                      "word": "efficiency.",
+                      "start": 21.719625,
+                      "end": 22.671625
+                    },
+                    {
+                      "word": " Could ",
+                      "start": 22.69425,
+                      "end": 22.97325
+                    },
+                    {
+                      "word": "you ",
+                      "start": 22.97325,
+                      "end": 23.11225
+                    },
+                    {
+                      "word": "tell ",
+                      "start": 23.11225,
+                      "end": 23.37925
+                    },
+                    {
+                      "word": "me ",
+                      "start": 23.37925,
+                      "end": 23.49525
+                    },
+                    {
+                      "word": "a ",
+                      "start": 23.49525,
+                      "end": 23.56525
+                    },
+                    {
+                      "word": "bit ",
+                      "start": 23.56525,
+                      "end": 23.73925
+                    },
+                    {
+                      "word": "more ",
+                      "start": 23.73925,
+                      "end": 23.97125
+                    },
+                    {
+                      "word": "about ",
+                      "start": 23.97125,
+                      "end": 24.37825
+                    },
+                    {
+                      "word": "the ",
+                      "start": 24.37825,
+                      "end": 24.71425
+                    },
+                    {
+                      "word": "specific ",
+                      "start": 24.71425,
+                      "end": 25.27225
+                    },
+                    {
+                      "word": "challenges ",
+                      "start": 25.27225,
+                      "end": 25.93325
+                    },
+                    {
+                      "word": "you're ",
+                      "start": 25.93325,
+                      "end": 26.14225
+                    },
+                    {
+                      "word": "facing ",
+                      "start": 26.14225,
+                      "end": 26.61825
+                    },
+                    {
+                      "word": "with ",
+                      "start": 26.61825,
+                      "end": 26.79325
+                    },
+                    {
+                      "word": "your ",
+                      "start": 26.79325,
+                      "end": 26.95525
+                    },
+                    {
+                      "word": "current ",
+                      "start": 26.95525,
+                      "end": 27.25725
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 27.25725,
+                      "end": 27.66325
+                    },
+                    {
+                      "word": "setup?",
+                      "start": 27.66325,
+                      "end": 28.24425
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 3
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. We're just finding a way to increase the production our reels.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 29.143000999999998,
+                      "end": 29.462999999999997
+                    },
+                    {
+                      "word": "We're ",
+                      "start": 29.462999999999997,
+                      "end": 29.703
+                    },
+                    {
+                      "word": "just ",
+                      "start": 29.703,
+                      "end": 29.782999999999998
+                    },
+                    {
+                      "word": "finding ",
+                      "start": 29.782999999999998,
+                      "end": 29.942999999999998
+                    },
+                    {
+                      "word": "a ",
+                      "start": 29.942999999999998,
+                      "end": 30.102999999999998
+                    },
+                    {
+                      "word": "way ",
+                      "start": 30.102999999999998,
+                      "end": 30.262999999999998
+                    },
+                    {
+                      "word": "to ",
+                      "start": 30.262999999999998,
+                      "end": 30.502999999999997
+                    },
+                    {
+                      "word": "increase ",
+                      "start": 30.502999999999997,
+                      "end": 31.303001
+                    },
+                    {
+                      "word": "the ",
+                      "start": 31.303001,
+                      "end": 31.622999999999998
+                    },
+                    {
+                      "word": "production ",
+                      "start": 31.622999999999998,
+                      "end": 32.103
+                    },
+                    {
+                      "word": "our ",
+                      "start": 32.383,
+                      "end": 32.703
+                    },
+                    {
+                      "word": "reels.",
+                      "start": 32.703,
+                      "end": 33.023
+                    }
+                  ]
+                },
+                {
+                  "role": "user",
+                  "content": "Instagram especially.",
+                  "words": [
+                    {
+                      "word": "Instagram ",
+                      "start": 33.343,
+                      "end": 33.743
+                    },
+                    {
+                      "word": "especially.",
+                      "start": 33.743,
+                      "end": 34.142997
+                    }
+                  ]
+                },
+                {
+                  "role": "user",
+                  "content": "and we're finding ways to automate parts of our screenwriting process.",
+                  "words": [
+                    {
+                      "word": "and ",
+                      "start": 34.463,
+                      "end": 34.543
+                    },
+                    {
+                      "word": "we're ",
+                      "start": 34.543,
+                      "end": 34.783
+                    },
+                    {
+                      "word": "finding ",
+                      "start": 34.783,
+                      "end": 34.943000000000005
+                    },
+                    {
+                      "word": "ways ",
+                      "start": 34.943000000000005,
+                      "end": 35.263000000000005
+                    },
+                    {
+                      "word": "to ",
+                      "start": 35.263000000000005,
+                      "end": 35.423
+                    },
+                    {
+                      "word": "automate ",
+                      "start": 35.423,
+                      "end": 35.903
+                    },
+                    {
+                      "word": "parts ",
+                      "start": 36.533,
+                      "end": 36.853
+                    },
+                    {
+                      "word": "of ",
+                      "start": 36.853,
+                      "end": 37.173
+                    },
+                    {
+                      "word": "our ",
+                      "start": 37.173,
+                      "end": 37.573
+                    },
+                    {
+                      "word": "screenwriting ",
+                      "start": 37.573,
+                      "end": 38.213
+                    },
+                    {
+                      "word": "process.",
+                      "start": 38.213,
+                      "end": 38.533
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Got it, automating the screenwriting for Instagram reels sounds interesting! When are you ideally hoping to have this automation up and running?",
+                  "words": [
+                    {
+                      "word": "Got ",
+                      "start": 39.948,
+                      "end": 40.203
+                    },
+                    {
+                      "word": "it, ",
+                      "start": 40.203,
+                      "end": 40.377
+                    },
+                    {
+                      "word": "automating ",
+                      "start": 40.377,
+                      "end": 40.946
+                    },
+                    {
+                      "word": "the ",
+                      "start": 40.946,
+                      "end": 41.086
+                    },
+                    {
+                      "word": "screenwriting ",
+                      "start": 41.086,
+                      "end": 41.585
+                    },
+                    {
+                      "word": "for ",
+                      "start": 41.585,
+                      "end": 41.701
+                    },
+                    {
+                      "word": "Instagram ",
+                      "start": 41.701,
+                      "end": 42.107
+                    },
+                    {
+                      "word": "reels ",
+                      "start": 42.107,
+                      "end": 42.316
+                    },
+                    {
+                      "word": "sounds ",
+                      "start": 42.316,
+                      "end": 42.63
+                    },
+                    {
+                      "word": "interesting!",
+                      "start": 42.63,
+                      "end": 43.373
+                    },
+                    {
+                      "word": " When ",
+                      "start": 43.384875,
+                      "end": 43.604875
+                    },
+                    {
+                      "word": "are ",
+                      "start": 43.604875,
+                      "end": 43.755875
+                    },
+                    {
+                      "word": "you ",
+                      "start": 43.755875,
+                      "end": 43.918875
+                    },
+                    {
+                      "word": "ideally ",
+                      "start": 43.918875,
+                      "end": 44.359875
+                    },
+                    {
+                      "word": "hoping ",
+                      "start": 44.359875,
+                      "end": 44.672875
+                    },
+                    {
+                      "word": "to ",
+                      "start": 44.672875,
+                      "end": 44.765875
+                    },
+                    {
+                      "word": "have ",
+                      "start": 44.765875,
+                      "end": 44.951875
+                    },
+                    {
+                      "word": "this ",
+                      "start": 44.951875,
+                      "end": 45.125875
+                    },
+                    {
+                      "word": "automation ",
+                      "start": 45.125875,
+                      "end": 45.624875
+                    },
+                    {
+                      "word": "up ",
+                      "start": 45.624875,
+                      "end": 45.764875
+                    },
+                    {
+                      "word": "and ",
+                      "start": 45.764875,
+                      "end": 45.880875
+                    },
+                    {
+                      "word": "running?",
+                      "start": 45.880875,
+                      "end": 46.437875
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 8
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "You're looking at for it to be up before, you know, the year, so in the next three weeks.",
+                  "words": [
+                    {
+                      "word": "You're ",
+                      "start": 47.142997,
+                      "end": 47.543
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 47.543,
+                      "end": 47.703
+                    },
+                    {
+                      "word": "at ",
+                      "start": 47.703,
+                      "end": 47.863
+                    },
+                    {
+                      "word": "for ",
+                      "start": 47.943000000000005,
+                      "end": 48.263000000000005
+                    },
+                    {
+                      "word": "it ",
+                      "start": 48.263000000000005,
+                      "end": 48.423
+                    },
+                    {
+                      "word": "to ",
+                      "start": 48.423,
+                      "end": 48.502998000000005
+                    },
+                    {
+                      "word": "be ",
+                      "start": 48.502998000000005,
+                      "end": 48.743
+                    },
+                    {
+                      "word": "up ",
+                      "start": 48.743,
+                      "end": 48.982998
+                    },
+                    {
+                      "word": "before, ",
+                      "start": 49.063,
+                      "end": 49.543
+                    },
+                    {
+                      "word": "you ",
+                      "start": 49.543,
+                      "end": 49.623000000000005
+                    },
+                    {
+                      "word": "know, ",
+                      "start": 49.623000000000005,
+                      "end": 49.783
+                    },
+                    {
+                      "word": "the ",
+                      "start": 49.783,
+                      "end": 49.863
+                    },
+                    {
+                      "word": "year, ",
+                      "start": 49.863,
+                      "end": 50.103
+                    },
+                    {
+                      "word": "so ",
+                      "start": 50.103,
+                      "end": 50.263000000000005
+                    },
+                    {
+                      "word": "in ",
+                      "start": 50.263000000000005,
+                      "end": 50.343
+                    },
+                    {
+                      "word": "the ",
+                      "start": 50.343,
+                      "end": 50.502998000000005
+                    },
+                    {
+                      "word": "next ",
+                      "start": 50.502998000000005,
+                      "end": 50.662998
+                    },
+                    {
+                      "word": "three ",
+                      "start": 50.662998,
+                      "end": 50.982998
+                    },
+                    {
+                      "word": "weeks.",
+                      "start": 50.982998,
+                      "end": 51.143
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Thanks for sharing that timeline, John. Just to get a better sense, is there a budget range you are looking at for this project?",
+                  "words": [
+                    {
+                      "word": "Thanks ",
+                      "start": 52.203,
+                      "end": 52.482
+                    },
+                    {
+                      "word": "for ",
+                      "start": 52.482,
+                      "end": 52.61
+                    },
+                    {
+                      "word": "sharing ",
+                      "start": 52.61,
+                      "end": 52.865
+                    },
+                    {
+                      "word": "that ",
+                      "start": 52.865,
+                      "end": 53.004
+                    },
+                    {
+                      "word": "timeline, ",
+                      "start": 53.004,
+                      "end": 53.457
+                    },
+                    {
+                      "word": "John.",
+                      "start": 53.457,
+                      "end": 54.026
+                    },
+                    {
+                      "word": " Just ",
+                      "start": 54.049041748046875,
+                      "end": 54.32804174804688
+                    },
+                    {
+                      "word": "to ",
+                      "start": 54.32804174804688,
+                      "end": 54.43204174804688
+                    },
+                    {
+                      "word": "get ",
+                      "start": 54.43204174804688,
+                      "end": 54.595041748046874
+                    },
+                    {
+                      "word": "a ",
+                      "start": 54.595041748046874,
+                      "end": 54.67604174804688
+                    },
+                    {
+                      "word": "better ",
+                      "start": 54.67604174804688,
+                      "end": 54.97804174804688
+                    },
+                    {
+                      "word": "sense, ",
+                      "start": 54.97804174804688,
+                      "end": 55.61704174804687
+                    },
+                    {
+                      "word": "is ",
+                      "start": 55.61704174804687,
+                      "end": 55.826041748046876
+                    },
+                    {
+                      "word": "there ",
+                      "start": 55.826041748046876,
+                      "end": 56.000041748046876
+                    },
+                    {
+                      "word": "a ",
+                      "start": 56.000041748046876,
+                      "end": 56.09304174804687
+                    },
+                    {
+                      "word": "budget ",
+                      "start": 56.09304174804687,
+                      "end": 56.522041748046874
+                    },
+                    {
+                      "word": "range ",
+                      "start": 56.522041748046874,
+                      "end": 56.94004174804687
+                    },
+                    {
+                      "word": "you ",
+                      "start": 56.94004174804687,
+                      "end": 57.11404174804687
+                    },
+                    {
+                      "word": "are ",
+                      "start": 57.11404174804687,
+                      "end": 57.24204174804687
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 57.24204174804687,
+                      "end": 57.613041748046875
+                    },
+                    {
+                      "word": "at ",
+                      "start": 57.613041748046875,
+                      "end": 57.76404174804688
+                    },
+                    {
+                      "word": "for ",
+                      "start": 57.76404174804688,
+                      "end": 57.90404174804687
+                    },
+                    {
+                      "word": "this ",
+                      "start": 57.90404174804687,
+                      "end": 58.07804174804688
+                    },
+                    {
+                      "word": "project?",
+                      "start": 58.07804174804688,
+                      "end": 58.80904174804687
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 9
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "You're on five thousand.",
+                  "words": [
+                    {
+                      "word": "You're ",
+                      "start": 59.593,
+                      "end": 59.912998
+                    },
+                    {
+                      "word": "on ",
+                      "start": 59.912998,
+                      "end": 60.073
+                    },
+                    {
+                      "word": "five ",
+                      "start": 60.073,
+                      "end": 60.313
+                    },
+                    {
+                      "word": "thousand.",
+                      "start": 60.313,
+                      "end": 60.553000000000004
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Thanks for sharing that, John. Could I also get your email address so I can save your details?",
+                  "words": [
+                    {
+                      "word": "Thanks ",
+                      "start": 61.878,
+                      "end": 62.169
+                    },
+                    {
+                      "word": "for ",
+                      "start": 62.169,
+                      "end": 62.296
+                    },
+                    {
+                      "word": "sharing ",
+                      "start": 62.296,
+                      "end": 62.586
+                    },
+                    {
+                      "word": "that, ",
+                      "start": 62.586,
+                      "end": 62.761
+                    },
+                    {
+                      "word": "John.",
+                      "start": 62.761,
+                      "end": 63.19
+                    },
+                    {
+                      "word": " Could ",
+                      "start": 63.21320825195313,
+                      "end": 63.39920825195313
+                    },
+                    {
+                      "word": "I ",
+                      "start": 63.39920825195313,
+                      "end": 63.46920825195313
+                    },
+                    {
+                      "word": "also ",
+                      "start": 63.46920825195313,
+                      "end": 63.689208251953126
+                    },
+                    {
+                      "word": "get ",
+                      "start": 63.689208251953126,
+                      "end": 63.817208251953126
+                    },
+                    {
+                      "word": "your ",
+                      "start": 63.817208251953126,
+                      "end": 63.96820825195312
+                    },
+                    {
+                      "word": "email ",
+                      "start": 63.96820825195312,
+                      "end": 64.21220825195313
+                    },
+                    {
+                      "word": "address ",
+                      "start": 64.21220825195313,
+                      "end": 64.54820825195313
+                    },
+                    {
+                      "word": "so ",
+                      "start": 64.54820825195313,
+                      "end": 64.66420825195313
+                    },
+                    {
+                      "word": "I ",
+                      "start": 64.66420825195313,
+                      "end": 64.74620825195312
+                    },
+                    {
+                      "word": "can ",
+                      "start": 64.74620825195312,
+                      "end": 64.90820825195313
+                    },
+                    {
+                      "word": "save ",
+                      "start": 64.90820825195313,
+                      "end": 65.11720825195313
+                    },
+                    {
+                      "word": "your ",
+                      "start": 65.11720825195313,
+                      "end": 65.26820825195313
+                    },
+                    {
+                      "word": "details?",
+                      "start": 65.26820825195313,
+                      "end": 66.02320825195312
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 10
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. Uh, you can reach me at john at real estate heroes dot com.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 66.932995,
+                      "end": 67.57299400000001
+                    },
+                    {
+                      "word": "Uh, ",
+                      "start": 67.57299400000001,
+                      "end": 67.89299
+                    },
+                    {
+                      "word": "you ",
+                      "start": 67.89299,
+                      "end": 68.053
+                    },
+                    {
+                      "word": "can ",
+                      "start": 68.053,
+                      "end": 68.21299
+                    },
+                    {
+                      "word": "reach ",
+                      "start": 68.21299,
+                      "end": 68.453
+                    },
+                    {
+                      "word": "me ",
+                      "start": 68.453,
+                      "end": 68.612995
+                    },
+                    {
+                      "word": "at ",
+                      "start": 68.612995,
+                      "end": 68.773
+                    },
+                    {
+                      "word": "john ",
+                      "start": 68.85300000000001,
+                      "end": 69.413
+                    },
+                    {
+                      "word": "at ",
+                      "start": 69.413,
+                      "end": 69.973
+                    },
+                    {
+                      "word": "real ",
+                      "start": 69.973,
+                      "end": 70.293
+                    },
+                    {
+                      "word": "estate ",
+                      "start": 70.293,
+                      "end": 70.773
+                    },
+                    {
+                      "word": "heroes ",
+                      "start": 70.773,
+                      "end": 71.333
+                    },
+                    {
+                      "word": "dot ",
+                      "start": 71.333,
+                      "end": 71.653
+                    },
+                    {
+                      "word": "com.",
+                      "start": 71.653,
+                      "end": 71.813
+                    }
+                  ]
+                }
+              ],
+              "transcript_with_tool_calls": [
+                {
+                  "role": "agent",
+                  "content": "Hi, welcome to AI Automation Hub, my name is Sally. What’s your name and what brings you here today?",
+                  "words": [
+                    {
+                      "word": "Hi, ",
+                      "start": 1.301,
+                      "end": 1.545
+                    },
+                    {
+                      "word": "welcome ",
+                      "start": 1.545,
+                      "end": 1.928
+                    },
+                    {
+                      "word": "to ",
+                      "start": 1.928,
+                      "end": 2.079
+                    },
+                    {
+                      "word": "AI ",
+                      "start": 2.079,
+                      "end": 2.334
+                    },
+                    {
+                      "word": "Automation ",
+                      "start": 2.334,
+                      "end": 2.892
+                    },
+                    {
+                      "word": "Hub, ",
+                      "start": 2.892,
+                      "end": 3.194
+                    },
+                    {
+                      "word": "my ",
+                      "start": 3.194,
+                      "end": 3.368
+                    },
+                    {
+                      "word": "name ",
+                      "start": 3.368,
+                      "end": 3.565
+                    },
+                    {
+                      "word": "is ",
+                      "start": 3.565,
+                      "end": 3.681
+                    },
+                    {
+                      "word": "Sally.",
+                      "start": 3.681,
+                      "end": 4.343
+                    },
+                    {
+                      "word": " What’s ",
+                      "start": 4.388916748046875,
+                      "end": 4.644916748046875
+                    },
+                    {
+                      "word": "your ",
+                      "start": 4.644916748046875,
+                      "end": 4.818916748046875
+                    },
+                    {
+                      "word": "name ",
+                      "start": 4.818916748046875,
+                      "end": 5.050916748046875
+                    },
+                    {
+                      "word": "and ",
+                      "start": 5.050916748046875,
+                      "end": 5.190916748046875
+                    },
+                    {
+                      "word": "what ",
+                      "start": 5.190916748046875,
+                      "end": 5.329916748046875
+                    },
+                    {
+                      "word": "brings ",
+                      "start": 5.329916748046875,
+                      "end": 5.549916748046875
+                    },
+                    {
+                      "word": "you ",
+                      "start": 5.549916748046875,
+                      "end": 5.666916748046875
+                    },
+                    {
+                      "word": "here ",
+                      "start": 5.666916748046875,
+                      "end": 5.851916748046875
+                    },
+                    {
+                      "word": "today?",
+                      "start": 5.851916748046875,
+                      "end": 6.432916748046875
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 0
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. My name is John, and I'm from a company called AI Euro Estates, and we're looking to find ways automate our marketing processes.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 7.2429997,
+                      "end": 7.643
+                    },
+                    {
+                      "word": "My ",
+                      "start": 7.643,
+                      "end": 7.803
+                    },
+                    {
+                      "word": "name ",
+                      "start": 7.803,
+                      "end": 7.963
+                    },
+                    {
+                      "word": "is ",
+                      "start": 7.963,
+                      "end": 8.043
+                    },
+                    {
+                      "word": "John, ",
+                      "start": 8.043,
+                      "end": 8.523
+                    },
+                    {
+                      "word": "and ",
+                      "start": 8.523,
+                      "end": 8.763
+                    },
+                    {
+                      "word": "I'm ",
+                      "start": 8.763,
+                      "end": 9.243
+                    },
+                    {
+                      "word": "from ",
+                      "start": 9.243,
+                      "end": 9.562999
+                    },
+                    {
+                      "word": "a ",
+                      "start": 9.562999,
+                      "end": 9.803
+                    },
+                    {
+                      "word": "company ",
+                      "start": 9.803,
+                      "end": 10.283
+                    },
+                    {
+                      "word": "called ",
+                      "start": 10.283,
+                      "end": 10.683
+                    },
+                    {
+                      "word": "AI ",
+                      "start": 10.923,
+                      "end": 11.883000000000001
+                    },
+                    {
+                      "word": "Euro ",
+                      "start": 12.043,
+                      "end": 12.363
+                    },
+                    {
+                      "word": "Estates, ",
+                      "start": 12.363,
+                      "end": 13.003
+                    },
+                    {
+                      "word": "and ",
+                      "start": 13.003,
+                      "end": 13.163
+                    },
+                    {
+                      "word": "we're ",
+                      "start": 13.163,
+                      "end": 13.403
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 13.403,
+                      "end": 13.643
+                    },
+                    {
+                      "word": "to ",
+                      "start": 13.643,
+                      "end": 13.803
+                    },
+                    {
+                      "word": "find ",
+                      "start": 13.803,
+                      "end": 14.283
+                    },
+                    {
+                      "word": "ways ",
+                      "start": 14.283,
+                      "end": 14.523
+                    },
+                    {
+                      "word": "automate ",
+                      "start": 14.693,
+                      "end": 15.093
+                    },
+                    {
+                      "word": "our ",
+                      "start": 15.093,
+                      "end": 15.333001
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 15.333001,
+                      "end": 15.573001
+                    },
+                    {
+                      "word": "processes.",
+                      "start": 15.573001,
+                      "end": 15.973
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Nice to meet you, John! Automating marketing processes sounds like a great way to boost efficiency. Could you tell me a bit more about the specific challenges you're facing with your current marketing setup?",
+                  "words": [
+                    {
+                      "word": "Nice ",
+                      "start": 17.644,
+                      "end": 17.911
+                    },
+                    {
+                      "word": "to ",
+                      "start": 17.911,
+                      "end": 18.016
+                    },
+                    {
+                      "word": "meet ",
+                      "start": 18.016,
+                      "end": 18.201
+                    },
+                    {
+                      "word": "you, ",
+                      "start": 18.201,
+                      "end": 18.364
+                    },
+                    {
+                      "word": "John!",
+                      "start": 18.364,
+                      "end": 18.91
+                    },
+                    {
+                      "word": " Automating ",
+                      "start": 18.921625,
+                      "end": 19.466625
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 19.466625,
+                      "end": 19.838625
+                    },
+                    {
+                      "word": "processes ",
+                      "start": 19.838625,
+                      "end": 20.453625
+                    },
+                    {
+                      "word": "sounds ",
+                      "start": 20.453625,
+                      "end": 20.743625
+                    },
+                    {
+                      "word": "like ",
+                      "start": 20.743625,
+                      "end": 20.894625
+                    },
+                    {
+                      "word": "a ",
+                      "start": 20.894625,
+                      "end": 20.976625
+                    },
+                    {
+                      "word": "great ",
+                      "start": 20.976625,
+                      "end": 21.196625
+                    },
+                    {
+                      "word": "way ",
+                      "start": 21.196625,
+                      "end": 21.335625
+                    },
+                    {
+                      "word": "to ",
+                      "start": 21.335625,
+                      "end": 21.428625
+                    },
+                    {
+                      "word": "boost ",
+                      "start": 21.428625,
+                      "end": 21.719625
+                    },
+                    {
+                      "word": "efficiency.",
+                      "start": 21.719625,
+                      "end": 22.671625
+                    },
+                    {
+                      "word": " Could ",
+                      "start": 22.69425,
+                      "end": 22.97325
+                    },
+                    {
+                      "word": "you ",
+                      "start": 22.97325,
+                      "end": 23.11225
+                    },
+                    {
+                      "word": "tell ",
+                      "start": 23.11225,
+                      "end": 23.37925
+                    },
+                    {
+                      "word": "me ",
+                      "start": 23.37925,
+                      "end": 23.49525
+                    },
+                    {
+                      "word": "a ",
+                      "start": 23.49525,
+                      "end": 23.56525
+                    },
+                    {
+                      "word": "bit ",
+                      "start": 23.56525,
+                      "end": 23.73925
+                    },
+                    {
+                      "word": "more ",
+                      "start": 23.73925,
+                      "end": 23.97125
+                    },
+                    {
+                      "word": "about ",
+                      "start": 23.97125,
+                      "end": 24.37825
+                    },
+                    {
+                      "word": "the ",
+                      "start": 24.37825,
+                      "end": 24.71425
+                    },
+                    {
+                      "word": "specific ",
+                      "start": 24.71425,
+                      "end": 25.27225
+                    },
+                    {
+                      "word": "challenges ",
+                      "start": 25.27225,
+                      "end": 25.93325
+                    },
+                    {
+                      "word": "you're ",
+                      "start": 25.93325,
+                      "end": 26.14225
+                    },
+                    {
+                      "word": "facing ",
+                      "start": 26.14225,
+                      "end": 26.61825
+                    },
+                    {
+                      "word": "with ",
+                      "start": 26.61825,
+                      "end": 26.79325
+                    },
+                    {
+                      "word": "your ",
+                      "start": 26.79325,
+                      "end": 26.95525
+                    },
+                    {
+                      "word": "current ",
+                      "start": 26.95525,
+                      "end": 27.25725
+                    },
+                    {
+                      "word": "marketing ",
+                      "start": 27.25725,
+                      "end": 27.66325
+                    },
+                    {
+                      "word": "setup?",
+                      "start": 27.66325,
+                      "end": 28.24425
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 3
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. We're just finding a way to increase the production our reels.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 29.143000999999998,
+                      "end": 29.462999999999997
+                    },
+                    {
+                      "word": "We're ",
+                      "start": 29.462999999999997,
+                      "end": 29.703
+                    },
+                    {
+                      "word": "just ",
+                      "start": 29.703,
+                      "end": 29.782999999999998
+                    },
+                    {
+                      "word": "finding ",
+                      "start": 29.782999999999998,
+                      "end": 29.942999999999998
+                    },
+                    {
+                      "word": "a ",
+                      "start": 29.942999999999998,
+                      "end": 30.102999999999998
+                    },
+                    {
+                      "word": "way ",
+                      "start": 30.102999999999998,
+                      "end": 30.262999999999998
+                    },
+                    {
+                      "word": "to ",
+                      "start": 30.262999999999998,
+                      "end": 30.502999999999997
+                    },
+                    {
+                      "word": "increase ",
+                      "start": 30.502999999999997,
+                      "end": 31.303001
+                    },
+                    {
+                      "word": "the ",
+                      "start": 31.303001,
+                      "end": 31.622999999999998
+                    },
+                    {
+                      "word": "production ",
+                      "start": 31.622999999999998,
+                      "end": 32.103
+                    },
+                    {
+                      "word": "our ",
+                      "start": 32.383,
+                      "end": 32.703
+                    },
+                    {
+                      "word": "reels.",
+                      "start": 32.703,
+                      "end": 33.023
+                    }
+                  ]
+                },
+                {
+                  "role": "user",
+                  "content": "Instagram especially.",
+                  "words": [
+                    {
+                      "word": "Instagram ",
+                      "start": 33.343,
+                      "end": 33.743
+                    },
+                    {
+                      "word": "especially.",
+                      "start": 33.743,
+                      "end": 34.142997
+                    }
+                  ]
+                },
+                {
+                  "role": "user",
+                  "content": "and we're finding ways to automate parts of our screenwriting process.",
+                  "words": [
+                    {
+                      "word": "and ",
+                      "start": 34.463,
+                      "end": 34.543
+                    },
+                    {
+                      "word": "we're ",
+                      "start": 34.543,
+                      "end": 34.783
+                    },
+                    {
+                      "word": "finding ",
+                      "start": 34.783,
+                      "end": 34.943000000000005
+                    },
+                    {
+                      "word": "ways ",
+                      "start": 34.943000000000005,
+                      "end": 35.263000000000005
+                    },
+                    {
+                      "word": "to ",
+                      "start": 35.263000000000005,
+                      "end": 35.423
+                    },
+                    {
+                      "word": "automate ",
+                      "start": 35.423,
+                      "end": 35.903
+                    },
+                    {
+                      "word": "parts ",
+                      "start": 36.533,
+                      "end": 36.853
+                    },
+                    {
+                      "word": "of ",
+                      "start": 36.853,
+                      "end": 37.173
+                    },
+                    {
+                      "word": "our ",
+                      "start": 37.173,
+                      "end": 37.573
+                    },
+                    {
+                      "word": "screenwriting ",
+                      "start": 37.573,
+                      "end": 38.213
+                    },
+                    {
+                      "word": "process.",
+                      "start": 38.213,
+                      "end": 38.533
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Got it, automating the screenwriting for Instagram reels sounds interesting! When are you ideally hoping to have this automation up and running?",
+                  "words": [
+                    {
+                      "word": "Got ",
+                      "start": 39.948,
+                      "end": 40.203
+                    },
+                    {
+                      "word": "it, ",
+                      "start": 40.203,
+                      "end": 40.377
+                    },
+                    {
+                      "word": "automating ",
+                      "start": 40.377,
+                      "end": 40.946
+                    },
+                    {
+                      "word": "the ",
+                      "start": 40.946,
+                      "end": 41.086
+                    },
+                    {
+                      "word": "screenwriting ",
+                      "start": 41.086,
+                      "end": 41.585
+                    },
+                    {
+                      "word": "for ",
+                      "start": 41.585,
+                      "end": 41.701
+                    },
+                    {
+                      "word": "Instagram ",
+                      "start": 41.701,
+                      "end": 42.107
+                    },
+                    {
+                      "word": "reels ",
+                      "start": 42.107,
+                      "end": 42.316
+                    },
+                    {
+                      "word": "sounds ",
+                      "start": 42.316,
+                      "end": 42.63
+                    },
+                    {
+                      "word": "interesting!",
+                      "start": 42.63,
+                      "end": 43.373
+                    },
+                    {
+                      "word": " When ",
+                      "start": 43.384875,
+                      "end": 43.604875
+                    },
+                    {
+                      "word": "are ",
+                      "start": 43.604875,
+                      "end": 43.755875
+                    },
+                    {
+                      "word": "you ",
+                      "start": 43.755875,
+                      "end": 43.918875
+                    },
+                    {
+                      "word": "ideally ",
+                      "start": 43.918875,
+                      "end": 44.359875
+                    },
+                    {
+                      "word": "hoping ",
+                      "start": 44.359875,
+                      "end": 44.672875
+                    },
+                    {
+                      "word": "to ",
+                      "start": 44.672875,
+                      "end": 44.765875
+                    },
+                    {
+                      "word": "have ",
+                      "start": 44.765875,
+                      "end": 44.951875
+                    },
+                    {
+                      "word": "this ",
+                      "start": 44.951875,
+                      "end": 45.125875
+                    },
+                    {
+                      "word": "automation ",
+                      "start": 45.125875,
+                      "end": 45.624875
+                    },
+                    {
+                      "word": "up ",
+                      "start": 45.624875,
+                      "end": 45.764875
+                    },
+                    {
+                      "word": "and ",
+                      "start": 45.764875,
+                      "end": 45.880875
+                    },
+                    {
+                      "word": "running?",
+                      "start": 45.880875,
+                      "end": 46.437875
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 8
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "You're looking at for it to be up before, you know, the year, so in the next three weeks.",
+                  "words": [
+                    {
+                      "word": "You're ",
+                      "start": 47.142997,
+                      "end": 47.543
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 47.543,
+                      "end": 47.703
+                    },
+                    {
+                      "word": "at ",
+                      "start": 47.703,
+                      "end": 47.863
+                    },
+                    {
+                      "word": "for ",
+                      "start": 47.943000000000005,
+                      "end": 48.263000000000005
+                    },
+                    {
+                      "word": "it ",
+                      "start": 48.263000000000005,
+                      "end": 48.423
+                    },
+                    {
+                      "word": "to ",
+                      "start": 48.423,
+                      "end": 48.502998000000005
+                    },
+                    {
+                      "word": "be ",
+                      "start": 48.502998000000005,
+                      "end": 48.743
+                    },
+                    {
+                      "word": "up ",
+                      "start": 48.743,
+                      "end": 48.982998
+                    },
+                    {
+                      "word": "before, ",
+                      "start": 49.063,
+                      "end": 49.543
+                    },
+                    {
+                      "word": "you ",
+                      "start": 49.543,
+                      "end": 49.623000000000005
+                    },
+                    {
+                      "word": "know, ",
+                      "start": 49.623000000000005,
+                      "end": 49.783
+                    },
+                    {
+                      "word": "the ",
+                      "start": 49.783,
+                      "end": 49.863
+                    },
+                    {
+                      "word": "year, ",
+                      "start": 49.863,
+                      "end": 50.103
+                    },
+                    {
+                      "word": "so ",
+                      "start": 50.103,
+                      "end": 50.263000000000005
+                    },
+                    {
+                      "word": "in ",
+                      "start": 50.263000000000005,
+                      "end": 50.343
+                    },
+                    {
+                      "word": "the ",
+                      "start": 50.343,
+                      "end": 50.502998000000005
+                    },
+                    {
+                      "word": "next ",
+                      "start": 50.502998000000005,
+                      "end": 50.662998
+                    },
+                    {
+                      "word": "three ",
+                      "start": 50.662998,
+                      "end": 50.982998
+                    },
+                    {
+                      "word": "weeks.",
+                      "start": 50.982998,
+                      "end": 51.143
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Thanks for sharing that timeline, John. Just to get a better sense, is there a budget range you are looking at for this project?",
+                  "words": [
+                    {
+                      "word": "Thanks ",
+                      "start": 52.203,
+                      "end": 52.482
+                    },
+                    {
+                      "word": "for ",
+                      "start": 52.482,
+                      "end": 52.61
+                    },
+                    {
+                      "word": "sharing ",
+                      "start": 52.61,
+                      "end": 52.865
+                    },
+                    {
+                      "word": "that ",
+                      "start": 52.865,
+                      "end": 53.004
+                    },
+                    {
+                      "word": "timeline, ",
+                      "start": 53.004,
+                      "end": 53.457
+                    },
+                    {
+                      "word": "John.",
+                      "start": 53.457,
+                      "end": 54.026
+                    },
+                    {
+                      "word": " Just ",
+                      "start": 54.049041748046875,
+                      "end": 54.32804174804688
+                    },
+                    {
+                      "word": "to ",
+                      "start": 54.32804174804688,
+                      "end": 54.43204174804688
+                    },
+                    {
+                      "word": "get ",
+                      "start": 54.43204174804688,
+                      "end": 54.595041748046874
+                    },
+                    {
+                      "word": "a ",
+                      "start": 54.595041748046874,
+                      "end": 54.67604174804688
+                    },
+                    {
+                      "word": "better ",
+                      "start": 54.67604174804688,
+                      "end": 54.97804174804688
+                    },
+                    {
+                      "word": "sense, ",
+                      "start": 54.97804174804688,
+                      "end": 55.61704174804687
+                    },
+                    {
+                      "word": "is ",
+                      "start": 55.61704174804687,
+                      "end": 55.826041748046876
+                    },
+                    {
+                      "word": "there ",
+                      "start": 55.826041748046876,
+                      "end": 56.000041748046876
+                    },
+                    {
+                      "word": "a ",
+                      "start": 56.000041748046876,
+                      "end": 56.09304174804687
+                    },
+                    {
+                      "word": "budget ",
+                      "start": 56.09304174804687,
+                      "end": 56.522041748046874
+                    },
+                    {
+                      "word": "range ",
+                      "start": 56.522041748046874,
+                      "end": 56.94004174804687
+                    },
+                    {
+                      "word": "you ",
+                      "start": 56.94004174804687,
+                      "end": 57.11404174804687
+                    },
+                    {
+                      "word": "are ",
+                      "start": 57.11404174804687,
+                      "end": 57.24204174804687
+                    },
+                    {
+                      "word": "looking ",
+                      "start": 57.24204174804687,
+                      "end": 57.613041748046875
+                    },
+                    {
+                      "word": "at ",
+                      "start": 57.613041748046875,
+                      "end": 57.76404174804688
+                    },
+                    {
+                      "word": "for ",
+                      "start": 57.76404174804688,
+                      "end": 57.90404174804687
+                    },
+                    {
+                      "word": "this ",
+                      "start": 57.90404174804687,
+                      "end": 58.07804174804688
+                    },
+                    {
+                      "word": "project?",
+                      "start": 58.07804174804688,
+                      "end": 58.80904174804687
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 9
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "You're on five thousand.",
+                  "words": [
+                    {
+                      "word": "You're ",
+                      "start": 59.593,
+                      "end": 59.912998
+                    },
+                    {
+                      "word": "on ",
+                      "start": 59.912998,
+                      "end": 60.073
+                    },
+                    {
+                      "word": "five ",
+                      "start": 60.073,
+                      "end": 60.313
+                    },
+                    {
+                      "word": "thousand.",
+                      "start": 60.313,
+                      "end": 60.553000000000004
+                    }
+                  ]
+                },
+                {
+                  "role": "agent",
+                  "content": "Thanks for sharing that, John. Could I also get your email address so I can save your details?",
+                  "words": [
+                    {
+                      "word": "Thanks ",
+                      "start": 61.878,
+                      "end": 62.169
+                    },
+                    {
+                      "word": "for ",
+                      "start": 62.169,
+                      "end": 62.296
+                    },
+                    {
+                      "word": "sharing ",
+                      "start": 62.296,
+                      "end": 62.586
+                    },
+                    {
+                      "word": "that, ",
+                      "start": 62.586,
+                      "end": 62.761
+                    },
+                    {
+                      "word": "John.",
+                      "start": 62.761,
+                      "end": 63.19
+                    },
+                    {
+                      "word": " Could ",
+                      "start": 63.21320825195313,
+                      "end": 63.39920825195313
+                    },
+                    {
+                      "word": "I ",
+                      "start": 63.39920825195313,
+                      "end": 63.46920825195313
+                    },
+                    {
+                      "word": "also ",
+                      "start": 63.46920825195313,
+                      "end": 63.689208251953126
+                    },
+                    {
+                      "word": "get ",
+                      "start": 63.689208251953126,
+                      "end": 63.817208251953126
+                    },
+                    {
+                      "word": "your ",
+                      "start": 63.817208251953126,
+                      "end": 63.96820825195312
+                    },
+                    {
+                      "word": "email ",
+                      "start": 63.96820825195312,
+                      "end": 64.21220825195313
+                    },
+                    {
+                      "word": "address ",
+                      "start": 64.21220825195313,
+                      "end": 64.54820825195313
+                    },
+                    {
+                      "word": "so ",
+                      "start": 64.54820825195313,
+                      "end": 64.66420825195313
+                    },
+                    {
+                      "word": "I ",
+                      "start": 64.66420825195313,
+                      "end": 64.74620825195312
+                    },
+                    {
+                      "word": "can ",
+                      "start": 64.74620825195312,
+                      "end": 64.90820825195313
+                    },
+                    {
+                      "word": "save ",
+                      "start": 64.90820825195313,
+                      "end": 65.11720825195313
+                    },
+                    {
+                      "word": "your ",
+                      "start": 65.11720825195313,
+                      "end": 65.26820825195313
+                    },
+                    {
+                      "word": "details?",
+                      "start": 65.26820825195313,
+                      "end": 66.02320825195312
+                    }
+                  ],
+                  "metadata": {
+                    "response_id": 10
+                  }
+                },
+                {
+                  "role": "user",
+                  "content": "Yeah. Uh, you can reach me at john at real estate heroes dot com.",
+                  "words": [
+                    {
+                      "word": "Yeah. ",
+                      "start": 66.932995,
+                      "end": 67.57299400000001
+                    },
+                    {
+                      "word": "Uh, ",
+                      "start": 67.57299400000001,
+                      "end": 67.89299
+                    },
+                    {
+                      "word": "you ",
+                      "start": 67.89299,
+                      "end": 68.053
+                    },
+                    {
+                      "word": "can ",
+                      "start": 68.053,
+                      "end": 68.21299
+                    },
+                    {
+                      "word": "reach ",
+                      "start": 68.21299,
+                      "end": 68.453
+                    },
+                    {
+                      "word": "me ",
+                      "start": 68.453,
+                      "end": 68.612995
+                    },
+                    {
+                      "word": "at ",
+                      "start": 68.612995,
+                      "end": 68.773
+                    },
+                    {
+                      "word": "john ",
+                      "start": 68.85300000000001,
+                      "end": 69.413
+                    },
+                    {
+                      "word": "at ",
+                      "start": 69.413,
+                      "end": 69.973
+                    },
+                    {
+                      "word": "real ",
+                      "start": 69.973,
+                      "end": 70.293
+                    },
+                    {
+                      "word": "estate ",
+                      "start": 70.293,
+                      "end": 70.773
+                    },
+                    {
+                      "word": "heroes ",
+                      "start": 70.773,
+                      "end": 71.333
+                    },
+                    {
+                      "word": "dot ",
+                      "start": 71.333,
+                      "end": 71.653
+                    },
+                    {
+                      "word": "com.",
+                      "start": 71.653,
+                      "end": 71.813
+                    }
+                  ]
+                },
+                {
+                  "role": "tool_call_invocation",
+                  "tool_call_id": "b9b3af8c193042c7",
+                  "name": "extract_details",
+                  "arguments": "{\"Company\": \"AI Euro Estates\", \"Budget\": 5000, \"Email\": \"john@realestateheroes.com\", \"Urgency\": \"mid_lead\", \"Requests\": \"Automate marketing processes, specifically screenwriting for Instagram reels\", \"Name\": \"John\"}",
+                  "time_sec": 73.798,
+                  "type": "custom"
+                }
+              ],
+              "latency": {},
+              "call_cost": {
+                "product_costs": [],
+                "total_duration_unit_price": 0,
+                "total_duration_seconds": 0,
+                "combined_cost": 0
+              },
+              "data_storage_setting": "everything",
+              "opt_in_signed_url": false,
+              "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6IndlYl9jYWxsXzcwMmJhMTM1ZmU2Mjg0YjNmNmYyYmM0ZTBlNiJ9LCJpc3MiOiJBUEl3UkNGdVBCYXdtMmgiLCJleHAiOjE3NjUzNjE5NTcsIm5iZiI6MCwic3ViIjoiY2xpZW50In0.sAj9wyVyic7YQg5IHCDggZmNZqAjrWEoDTIfPyVfxwg"
+            },
+            "name": "extract_details",
+            "args": {
+              "Company": "AI Euro Estates",
+              "Budget": 5000,
+              "Email": "john@realestateheroes.com",
+              "Urgency": "mid_lead",
+              "Requests": "Automate marketing processes, specifically screenwriting for Instagram reels",
+              "Name": "John"
+            }
+          },
+          "webhookUrl": "https://n8n-dainamiai-u36679.vm.elestio.app/webhook/leadcall",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f5ed4295-87ba-4d76-9d96-c74d61c10cd5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c459f4ebcadd20c3258ade09582fe0f02de933363f6184259e0c9a36784090"
+  },
+  "id": "CqdouLeJs6CZo4BT",
+  "tags": []
+}

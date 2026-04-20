@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storm Damage? Free Roof Inspection | Restore Contracting | Indianapolis</title>
+<meta name="description" content="Hail, wind, or storm damage to your roof? Restore Contracting offers free inspections in Indianapolis. Get a response in under 2 hours.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black:   #0a0c0f;
+    --dark1:   #111318;
+    --dark2:   #181b21;
+    --dark3:   #1f2229;
+    --card:    #252830;
+    --border:  #2e323c;
+
+    --red:     #d42020;
+    --red2:    #b81a1a;
+    --red3:    #e84040;
+    --redL:    rgba(212,32,32,0.12);
+    --redB:    rgba(212,32,32,0.28);
+
+    --blue:    #6ab4d8;
+    --blue2:   #4fa0c8;
+    --blue3:   #90ccec;
+    --blueL:   rgba(106,180,216,0.10);
+    --blueB:   rgba(106,180,216,0.25);
+
+    --white:   #ffffff;
+    --text:    #eaecf0;
+    --light:   #b8c4d0;
+    --muted:   #7a8694;
+    --dim:     #4a5260;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--black);
+    border-bottom: 2px solid var(--red);
+    padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { text-decoration: none; }
+  .nav-logo .logo-main {
+    font-size: 1.15rem; font-weight: 900; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--white);
+  }
+  .nav-logo .logo-main span { color: var(--red); }
+  .nav-logo .logo-sub {
+    font-size: 0.55rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--blue); display: block;
+  }
+  .nav-phone {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: var(--red); color: var(--white);
+    padding: 0.5rem 1.25rem; border-radius: 6px;
+    text-decoration: none; font-weight: 800; font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .nav-phone:hover { background: var(--red2); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--black);
+    padding: 3rem 1.5rem 3.5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-glow-red {
+    position: absolute; top: -120px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(212,32,32,0.08) 0%, transparent 65%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-glow-blue {
+    position: absolute; bottom: -100px; left: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(106,180,216,0.06) 0%, transparent 65%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(106,180,216,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(106,180,216,0.03) 1px, transparent 1px);
+    background-size: 50px 50px; pointer-events: none;
+  }
+  .hero-inner { max-width: 1020px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-layout { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start; }
+  @media (min-width: 768px) { .hero-layout { grid-template-columns: 1fr 1fr; } }
+
+  .storm-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--redL); border: 1px solid var(--redB);
+    color: var(--red3); padding: 0.35rem 0.9rem; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 700; margin-bottom: 1.25rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .storm-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  .hero h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 900; line-height: 1.1;
+    letter-spacing: -0.02em; margin-bottom: 1rem; color: var(--white);
+  }
+  .hero h1 .accent-red { color: var(--red); }
+  .hero h1 .accent-blue { color: var(--blue); }
+  .hero-sub {
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    color: var(--light); line-height: 1.75; margin-bottom: 1.75rem;
+    border-left: 3px solid var(--blue);
+    padding-left: 1rem;
+  }
+  .trust-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .trust-pill {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: var(--blueL); border: 1px solid var(--blueB);
+    color: var(--blue3); padding: 0.3rem 0.8rem; border-radius: 50px;
+    font-size: 0.73rem; font-weight: 600;
+  }
+  .trust-pill .check { color: var(--blue); }
+
+  /* ── LEAD FORM ── */
+  .form-card {
+    background: var(--white);
+    border-radius: 16px; padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .form-header {
+    background: var(--red); color: var(--white);
+    margin: -2rem -2rem 1.5rem; padding: 1.25rem 2rem;
+    border-radius: 16px 16px 0 0; text-align: center;
+  }
+  .form-header h2 { font-size: 1.1rem; font-weight: 900; }
+  .form-header p { font-size: 0.78rem; opacity: 0.9; margin-top: 0.2rem; }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block; font-size: 0.75rem; font-weight: 700;
+    color: #374151; margin-bottom: 0.3rem;
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%; padding: 0.7rem 0.9rem;
+    border: 1.5px solid #d1d5db; border-radius: 8px;
+    font-size: 0.95rem; font-family: inherit;
+    color: #111827; background: #f9fafb;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none; border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(212,32,32,0.12); background: #fff;
+  }
+  .form-group textarea { resize: vertical; min-height: 65px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .damage-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .damage-option { position: relative; }
+  .damage-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .damage-option label {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0.55rem 0.4rem; border: 1.5px solid #d1d5db; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 600; color: #374151; cursor: pointer;
+    transition: all 0.15s; text-align: center; background: #f9fafb;
+    text-transform: none;
+  }
+  .damage-option input[type="radio"]:checked + label {
+    border-color: var(--red); background: rgba(212,32,32,0.07); color: #a01515;
+  }
+
+  .btn-submit {
+    width: 100%; padding: 0.95rem;
+    background: var(--red); color: var(--white);
+    border: none; border-radius: 10px; cursor: pointer;
+    font-size: 1rem; font-weight: 900;
+    transition: all 0.2s; margin-top: 0.5rem;
+    box-shadow: 0 4px 20px rgba(212,32,32,0.35);
+  }
+  .btn-submit:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(212,32,32,0.5); }
+  .form-privacy { font-size: 0.68rem; color: #9ca3af; text-align: center; margin-top: 0.75rem; line-height: 1.5; }
+
+  .form-success { display: none; text-align: center; padding: 2rem 1rem; }
+  .form-success .si { font-size: 3rem; margin-bottom: 1rem; }
+  .form-success h3 { font-size: 1.25rem; font-weight: 900; color: #111827; margin-bottom: 0.5rem; }
+  .form-success p { font-size: 0.88rem; color: #6b7280; line-height: 1.65; }
+
+  /* ── STATS BAR ── */
+  .stats-bar { background: var(--red); padding: 1.25rem 1.5rem; }
+  .stats-inner {
+    max-width: 1020px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem; text-align: center;
+  }
+  .stat-num { font-size: 1.6rem; font-weight: 900; color: var(--white); line-height: 1; }
+  .stat-lbl { font-size: 0.66rem; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--dark1); padding: 4rem 1.5rem; }
+  .how-inner { max-width: 1020px; margin: 0 auto; }
+  .section-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--blue); margin-bottom: 0.4rem; }
+  .section-title { font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 900; color: var(--white); margin-bottom: 2.5rem; letter-spacing: -0.02em; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .step { background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--blue); color: var(--black);
+    font-weight: 900; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .step h3 { font-size: 1rem; font-weight: 800; color: var(--white); margin-bottom: 0.5rem; }
+  .step p { font-size: 0.83rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── SERVICES ── */
+  .services { background: var(--black); padding: 4rem 1.5rem; }
+  .services-inner { max-width: 1020px; margin: 0 auto; }
+  .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .service-card {
+    background: var(--dark1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s;
+  }
+  .service-card:hover { border-color: var(--blue); }
+  .service-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+  .service-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--white); margin-bottom: 0.4rem; }
+  .service-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── BOTTOM CTA ── */
+  .cta-band {
+    background: linear-gradient(135deg, rgba(212,32,32,0.12) 0%, rgba(106,180,216,0.06) 100%);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 3.5rem 1.5rem; text-align: center;
+  }
+  .cta-band h2 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; color: var(--white); margin-bottom: 0.75rem; }
+  .cta-band p { font-size: 0.95rem; color: var(--light); margin-bottom: 1.75rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .btn-cta-lg {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--red); color: var(--white);
+    padding: 1rem 2.5rem; border-radius: 10px;
+    text-decoration: none; font-weight: 900; font-size: 1rem;
+    transition: all 0.2s; box-shadow: 0 4px 24px rgba(212,32,32,0.35);
+  }
+  .btn-cta-lg:hover { background: var(--red2); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer { background: #06080a; border-top: 1px solid var(--border); padding: 2rem 1.5rem; font-size: 0.78rem; color: var(--dim); }
+  .footer-inner { max-width: 1020px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+  .footer-logo { font-weight: 900; color: var(--white); font-size: 0.95rem; }
+  .footer-logo span { color: var(--red); }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--blue); }
+
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .hero { padding: 2rem 1rem 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="logo-main">Restore <span>Contracting</span></span>
+    <span class="logo-sub">Indianapolis, IN · BBB Accredited</span>
+  </a>
+  <a href="tel:3177801410" class="nav-phone">📞 (317) 780-1410</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-red"></div>
+  <div class="hero-glow-blue"></div>
+  <div class="hero-inner">
+    <div class="hero-layout">
+
+      <div class="hero-left">
+        <div class="storm-badge">
+          <span class="storm-dot"></span>
+          Now Scheduling Free Inspections
+        </div>
+        <h1>Storm Damage?<br>Get a <span class="accent-red">Free Inspection</span><br><span class="accent-blue">in 24 Hours.</span></h1>
+        <p class="hero-sub">
+          Hail, wind, or ice damage left untreated costs far more down the road.
+          We inspect, document, and handle your insurance claim — at no cost to you.
+        </p>
+        <div class="trust-pills">
+          <span class="trust-pill"><span class="check">✓</span> BBB Accredited</span>
+          <span class="trust-pill"><span class="check">✓</span> Licensed &amp; Insured</span>
+          <span class="trust-pill"><span class="check">✓</span> Indianapolis Metro</span>
+          <span class="trust-pill"><span class="check">✓</span> Roof · Siding · Gutters</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="form-card" id="leadFormCard">
+          <div class="form-header">
+            <h2>Request Your Free Inspection</h2>
+            <p>We respond within 2 hours — guaranteed</p>
+          </div>
+          <form id="leadForm">
+            <input type="hidden" id="utm_source" name="utm_source">
+            <input type="hidden" id="utm_medium" name="utm_medium">
+            <input type="hidden" id="utm_campaign" name="utm_campaign">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" name="firstName" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" placeholder="(317) 555-0000" required>
+            </div>
+            <div class="form-group">
+              <label for="address">Property Address *</label>
+              <input type="text" id="address" name="address" placeholder="1234 Maple St, Indianapolis" required>
+            </div>
+            <div class="form-group">
+              <label>Type of Damage *</label>
+              <div class="damage-options">
+                <div class="damage-option">
+                  <input type="radio" id="hail" name="damageType" value="Hail Damage" required>
+                  <label for="hail">🧊 Hail Damage</label>
+                </div>
+                <div class="damage-option">
+                  <input type="radio" id="wind" name="damageType" value="Wind Damage">
+                  <label for="wind">💨 Wind Damage</label>
+                </div>
+                <div class="damage-option">
+                  <input type="radio" id="ice" name="damageType" value="Ice / Water">
+                  <label for="ice">❄️ Ice / Water</label>
+                </div>
+                <div class="damage-option">
+                  <input type="radio" id="other" name="damageType" value="Not Sure">
+                  <label for="other">❓ Not Sure</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="notes">Details <span style="font-weight:400;text-transform:none;color:#9ca3af">(optional)</span></label>
+              <textarea id="notes" name="notes" placeholder="When did it happen? Any visible damage?"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Get My Free Inspection →</button>
+            <p class="form-privacy">🔒 Private &amp; secure. No spam — only your inspection team will contact you.</p>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="si">✅</div>
+            <h3>Request Received!</h3>
+            <p>Restore Contracting will call or text you within 2 hours to schedule your free inspection.<br><br>
+            Questions? Call us: <a href="tel:3177801410" style="color:var(--red);font-weight:700">(317) 780-1410</a></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div><div class="stat-num">Free</div><div class="stat-lbl">Inspection — No Cost</div></div>
+    <div><div class="stat-num">&lt;2 hrs</div><div class="stat-lbl">Response Guarantee</div></div>
+    <div><div class="stat-num">$0</div><div class="stat-lbl">Out of Pocket (Insurance)</div></div>
+    <div><div class="stat-num">Indy</div><div class="stat-lbl">Metro + Fort Wayne</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-inner">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">3 Steps. Zero Hassle.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Submit This Form</h3>
+        <p>Takes 60 seconds. We collect your address and damage type so we come prepared with the right equipment.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We Call to Schedule</h3>
+        <p>A Restore Contracting rep calls or texts within 2 hours to book your inspection at a time that works for you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Free Inspection + Estimate</h3>
+        <p>We inspect, document everything with photos, and provide a written estimate. We work directly with your insurance to maximize your claim.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services">
+  <div class="services-inner">
+    <div class="section-label">What We Fix</div>
+    <h2 class="section-title">Full Storm Damage Coverage</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-icon">🏠</div>
+        <h4>Roofing</h4>
+        <p>Full replacements and repairs for shingle, metal, and flat roofs damaged by hail, wind, or storm.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🏗️</div>
+        <h4>Siding</h4>
+        <p>Wind and hail damage to vinyl, fiber cement, and wood siding — repaired or fully replaced.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌧️</div>
+        <h4>Gutters</h4>
+        <p>Storm-damaged gutters repaired or replaced to protect your foundation and landscaping year-round.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <h4>Insurance Claims</h4>
+        <p>We document damage thoroughly and work directly with your insurance company so you get what you're owed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="cta-band">
+  <h2>Don't Wait — Storm Damage Gets Worse</h2>
+  <p>Water intrusion, mold, and structural damage increase every week you delay. A free inspection costs you nothing. Not scheduling one could cost thousands.</p>
+  <a href="#leadForm" class="btn-cta-lg">Request Free Inspection →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Restore <span>Contracting</span>, Inc.</div>
+      <div>1111 E. 54th St., Indianapolis, IN 46220</div>
+    </div>
+    <div style="text-align:right">
+      <div><a href="tel:3177801410">(317) 780-1410</a></div>
+      <div><a href="mailto:mlostone@gmail.com">mlostone@gmail.com</a></div>
+      <div style="margin-top:0.25rem">Licensed · Insured · BBB Accredited</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Capture UTM parameters (Google Ads tracking)
+(function() {
+  const p = new URLSearchParams(window.location.search);
+  ['utm_source','utm_medium','utm_campaign'].forEach(function(k) {
+    const el = document.getElementById(k);
+    if (el) el.value = p.get(k) || '';
+  });
+})();
+
+// Form submit → n8n webhook
+document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.btn-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  const data = {
+    firstName:    document.getElementById('firstName').value,
+    lastName:     document.getElementById('lastName').value,
+    phone:        document.getElementById('phone').value,
+    address:      document.getElementById('address').value,
+    damageType:   document.querySelector('input[name="damageType"]:checked')?.value || 'Not specified',
+    notes:        document.getElementById('notes').value,
+    utm_source:   document.getElementById('utm_source').value,
+    utm_medium:   document.getElementById('utm_medium').value,
+    utm_campaign: document.getElementById('utm_campaign').value,
+    submittedAt:  new Date().toISOString()
+  };
+
+  try {
+    await fetch('YOUR_N8N_WEBHOOK_URL', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch (err) {
+    console.error('Webhook error:', err);
+  }
+
+  document.getElementById('leadForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+});
+</script>
+
+</body>
+</html>
