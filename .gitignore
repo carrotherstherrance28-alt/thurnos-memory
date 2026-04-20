@@ -1,0 +1,16 @@
+# Sensitive credentials — NEVER commit these
+memory/n8n_api_key.txt
+*_api_key.txt
+*.env
+.env.*
+*.key
+*.secret
+*_token.txt
+*_credentials.txt
+
+# LibreOffice lockfiles
+.~lock.*
+
+# macOS junk
+.DS_Store
+**/.DS_Store
