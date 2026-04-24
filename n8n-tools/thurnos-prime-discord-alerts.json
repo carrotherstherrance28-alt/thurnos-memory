@@ -1,0 +1,171 @@
+{
+  "name": "Thurnos Prime — Discord Ops Alerts",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [240, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\nconst workflowName = d.workflow?.name || 'Unknown Workflow';\nconst workflowId = d.workflow?.id || '';\nconst errorMsg = (d.error?.message || 'No error message').substring(0, 1000);\nconst lastNode = d.lastNodeExecuted || 'Unknown';\nconst execUrl = d.execution?.url || ('https://therrancecarrothers.app.n8n.cloud/workflow/' + workflowId + '/executions');\n\nconst payload = {\n  embeds: [{\n    title: '🚨 Workflow Error',\n    color: 15158332,\n    fields: [\n      { name: '📋 Workflow', value: workflowName, inline: true },\n      { name: '🔴 Failed At', value: lastNode, inline: true },\n      { name: '\\u200b', value: '\\u200b', inline: false },\n      { name: '⚠️ Error', value: errorMsg, inline: false },\n      { name: '🔗 View', value: '[Open Execution](' + execUrl + ')', inline: false }\n    ],\n    timestamp: new Date().toISOString(),\n    footer: { text: 'Thurnos Prime • Thurr Solutions Ops' }\n  }]\n};\n\nreturn [{ json: { payload: JSON.stringify(payload) } }];"
+      },
+      "id": "00000000-0000-0000-0000-000000000002",
+      "name": "Format Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/v10/channels/1490822226164056116/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.payload }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Thurnos Prime Bot"
+        }
+      },
+      "id": "00000000-0000-0000-0000-000000000003",
+      "name": "Discord: #errors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [720, 160]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-alert",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "00000000-0000-0000-0000-000000000004",
+      "name": "Lead Alert Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 380],
+      "webhookId": "aa000000-0000-0000-0000-000000000004"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst d = raw.body || raw;\n\nconst leadName  = d.leadName  || d.lead_name  || d.name  || 'Unknown Lead';\nconst phone     = d.phone     || d.phoneNumber || d.phone_number || 'Not provided';\nconst service   = d.service   || d.serviceNeeded || d.service_needed || 'Not specified';\nconst source    = d.source    || d.leadSource || d.lead_source || 'Unknown';\nconst decision  = String(d.decision || d.qualified || d.result || '');\nconst icpScore  = d.icpScore ?? d.icp_score ?? null;\n\nconst qualified = ['pass', 'qualif', 'true', '1'].some(k => decision.toLowerCase().includes(k));\nconst decisionText = qualified ? '✅ PASS — Qualified' : '❌ FAIL — Not Qualified';\nconst color = qualified ? 5763719 : 15158332;\n\nconst fields = [\n  { name: '👤 Lead Name',      value: leadName, inline: true },\n  { name: '📞 Phone',          value: phone,    inline: true },\n  { name: '\\u200b',            value: '\\u200b', inline: true },\n  { name: '🔧 Service Needed', value: service,  inline: true },\n  { name: '📍 Source',         value: source,   inline: true },\n  { name: '\\u200b',            value: '\\u200b', inline: true },\n  { name: '🎯 Decision',       value: decisionText, inline: false }\n];\n\nif (icpScore !== null && icpScore !== '') {\n  fields.push({ name: '📊 ICP Score', value: String(icpScore), inline: true });\n}\n\nconst payload = {\n  embeds: [{\n    title: '🎯 New Lead — Thurr Solutions',\n    color,\n    fields,\n    timestamp: new Date().toISOString(),\n    footer: { text: 'Thurnos Prime • Lead Qualification System' }\n  }]\n};\n\nreturn [{ json: { payload: JSON.stringify(payload) } }];"
+      },
+      "id": "00000000-0000-0000-0000-000000000005",
+      "name": "Format Lead Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 380]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/v10/channels/1490821698549710898/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.payload }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Thurnos Prime Bot"
+        }
+      },
+      "id": "00000000-0000-0000-0000-000000000006",
+      "name": "Discord: #lead-alerts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [720, 380]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "workflow-complete",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "00000000-0000-0000-0000-000000000007",
+      "name": "Workflow Complete Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 600],
+      "webhookId": "bb000000-0000-0000-0000-000000000007"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst d = raw.body || raw;\n\nconst workflowName = d.workflowName || d.workflow_name || d.name || 'Unknown Workflow';\nconst status       = d.status || 'Completed';\nconst nodesRun     = d.nodesExecuted ?? d.nodes_executed ?? null;\nconst duration     = d.duration ?? null;\nconst execUrl      = d.executionUrl  || d.execution_url  || null;\nconst notes        = d.notes || null;\n\nconst fields = [\n  { name: '📋 Workflow', value: workflowName, inline: true },\n  { name: '✅ Status',   value: status,       inline: true }\n];\nif (nodesRun !== null) fields.push({ name: '⚡ Nodes Run',  value: String(nodesRun), inline: true });\nif (duration  !== null) fields.push({ name: '⏱️ Duration', value: String(duration), inline: true });\nif (execUrl)  fields.push({ name: '🔗 Execution', value: '[View in n8n](' + execUrl + ')', inline: false });\nif (notes)    fields.push({ name: '📝 Notes',     value: notes, inline: false });\n\nconst payload = {\n  embeds: [{\n    title: '✅ Workflow Completed',\n    color: 5763719,\n    fields,\n    timestamp: new Date().toISOString(),\n    footer: { text: 'Thurnos Prime • Thurr Solutions Ops' }\n  }]\n};\n\nreturn [{ json: { payload: JSON.stringify(payload) } }];"
+      },
+      "id": "00000000-0000-0000-0000-000000000008",
+      "name": "Format Completion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 600]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/v10/channels/1490821603787935814/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.payload }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Thurnos Prime Bot"
+        }
+      },
+      "id": "00000000-0000-0000-0000-000000000009",
+      "name": "Discord: #n8n-logs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [720, 600]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [[{ "node": "Format Error", "type": "main", "index": 0 }]]
+    },
+    "Format Error": {
+      "main": [[{ "node": "Discord: #errors", "type": "main", "index": 0 }]]
+    },
+    "Lead Alert Webhook": {
+      "main": [[{ "node": "Format Lead Alert", "type": "main", "index": 0 }]]
+    },
+    "Format Lead Alert": {
+      "main": [[{ "node": "Discord: #lead-alerts", "type": "main", "index": 0 }]]
+    },
+    "Workflow Complete Webhook": {
+      "main": [[{ "node": "Format Completion", "type": "main", "index": 0 }]]
+    },
+    "Format Completion": {
+      "main": [[{ "node": "Discord: #n8n-logs", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart Path Bloom — Partnership Proposal | Thurr Solutions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream:    #fdf8f3;
+    --warm1:    #f9f1e8;
+    --warm2:    #f0e6d8;
+    --border:   #e4d5c4;
+    --sage:     #7a9e8e;
+    --sage2:    #5c8272;
+    --lavender: #9b8fc0;
+    --lav2:     #7b6fa0;
+    --blush:    #d4847a;
+    --text:     #2c2420;
+    --muted:    #7a6a5a;
+    --dim:      #a89888;
+    --serif:    'Playfair Display', Georgia, serif;
+    --sans:     'Inter', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
+  }
+
+  @media print {
+    .page { padding: 40px 40px 60px; }
+    body { background: white; }
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .brand-name {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .brand-tagline {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .proposal-meta {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 48px 0 56px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 56px;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── Dedication block ── */
+  .dedication {
+    background: var(--warm1);
+    border-left: 3px solid var(--lavender);
+    border-radius: 0 12px 12px 0;
+    padding: 28px 32px;
+    margin: 0 0 56px;
+  }
+
+  .dedication-intro {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .dedication-quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--lav2);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .dedication-attr {
+    font-size: 13px;
+    color: var(--dim);
+    font-weight: 500;
+  }
+
+  .dedication-close {
+    margin-top: 16px;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--sage);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* ── Strength cards ── */
+  .strength-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .strength-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .strength-card-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .strength-card-title::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+  }
+
+  .strength-card p {
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 0;
+  }
+
+  /* ── Phase cards ── */
+  .phase {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .phase-header {
+    padding: 20px 24px;
+    background: var(--warm1);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .phase-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .phase-meta {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .phase-meta strong {
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .phase-body {
+    padding: 24px;
+  }
+
+  .phase-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--warm2);
+  }
+
+  .phase-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .phase-item-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .phase-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--warm2);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .phase-item p {
+    font-size: 13.5px;
+    padding-left: 30px;
+    margin-bottom: 0;
+  }
+
+  /* ── Funding section ── */
+  .funding-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .funding-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .funding-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--warm2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .funding-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .funding-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  /* ── Investment table ── */
+  .investment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  .investment-table th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 600;
+    padding: 10px 16px;
+    background: var(--warm1);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .investment-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--warm2);
+    color: var(--muted);
+    vertical-align: top;
+  }
+
+  .investment-table tr:last-child td { border-bottom: none; }
+
+  .investment-table .phase-name {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .investment-table .price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .deposit-note {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: var(--warm1);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .deposit-note strong { color: var(--text); }
+
+  /* ── Next steps ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 20px;
+    counter-reset: step;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 24px;
+  }
+
+  .step:last-child { padding-bottom: 0; }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--lavender);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step:not(:last-child) .step-number::after {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: calc(100% + 24px - 32px);
+    background: var(--border);
+    z-index: 0;
+  }
+
+  .step-content {
+    padding-top: 5px;
+  }
+
+  .step-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  /* ── Closing ── */
+  .closing {
+    text-align: center;
+    padding: 48px 32px;
+    background: var(--warm1);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-top: 56px;
+  }
+
+  .closing-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .closing-text {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  .contact-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .contact-pill {
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    background: white;
+    text-decoration: none;
+  }
+
+  .contact-pill.primary {
+    background: var(--lavender);
+    border-color: var(--lavender);
+    color: white;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--dim);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">Thurr Solutions LLC</div>
+      <div class="brand-tagline">AI Automation · Digital Products</div>
+    </div>
+    <div class="proposal-meta">
+      Prepared for: <strong>Kendalyn</strong><br>
+      Heart Path Bloom<br>
+      April 2026 · Version 2.0
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Partnership Proposal</div>
+    <div class="hero-title">Heart Path Bloom</div>
+    <div class="hero-subtitle">From heartfelt prototype to the platform that reaches teens who need it</div>
+  </div>
+
+  <!-- Dedication -->
+  <div class="dedication">
+    <div class="dedication-intro">Before anything else — I read your dedication.</div>
+    <div class="dedication-quote">"This one's for you. I carry you with me every single day. I hope this helps even one person feel less alone the way I felt alone. I love you, always."</div>
+    <div class="dedication-attr">— Kendalyn</div>
+    <div class="dedication-close">
+      That's not a product pitch. That's a reason. What you built carries that weight — you can feel it in every screen. The copy doesn't sound like an app. It sounds like someone who actually needed this and decided to build it herself.<br><br>
+      My job isn't to change what you built. It's to make sure it can reach the teenagers who need it — safely, legally, and at a scale that honors what you started.
+    </div>
+  </div>
+
+  <!-- What's Strong -->
+  <div class="section">
+    <div class="section-label">What You've Already Built</div>
+    <div class="section-title">And it's strong — let me be specific.</div>
+    <p>Before I say anything about what comes next, I want to name what you got right. Because most of it is exceptional and none of it should change.</p>
+
+    <div class="strength-grid">
+      <div class="strength-card">
+        <div class="strength-card-title">The emotional copy</div>
+        <p>Stigma-free, teen-voice, trauma-informed throughout. Better than what most funded startups produce with professional copywriters. Don't let anyone touch it.</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-card-title">My Story tab</div>
+        <p>Your biggest differentiator. No competitor has Kendalyn's story. That tab alone will convert users, win press, and open grant doors a generic wellness app never could.</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-card-title">The Coping Toolbox</div>
+        <p>5-4-3-2-1 grounding, breathing exercises, movement — these are evidence-adjacent tools that will hold up when a licensed clinician reviews the app. You didn't guess. You built things that work.</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-card-title">Crisis resources</div>
+        <p>988, Crisis Text Line, The Dougy Center — correct resources, surfaced the right way. On the most legally sensitive layer of the entire product, you got it right instinctively.</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-card-title">Therapy pricing model</div>
+        <p>$0 free consult + $30 every two weeks is genuinely teen-accessible. That pricing will make this competitive for school partnerships and grants in ways $150/session platforms never can be.</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-card-title">Working prototype</div>
+        <p>User auth, journaling, check-in flow, navigation — all working. This isn't a mockup. It's a product. That changes how funders and partners see you from the first conversation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="section">
+    <div class="section-label">What Comes Next</div>
+    <div class="section-title">Two phases. Your momentum protected.</div>
+    <p>The missing pieces aren't failures — they're the natural next layer that turns a prototype into something that can legally launch, scale, and actually deliver on the therapy model you've already envisioned. We do this in phases so you're never overwhelmed and always in control.</p>
+
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-title">Phase 1 — Production Foundation</div>
+        <div class="phase-meta">
+          <strong>$3,500 setup</strong><br>
+          $500/month · 6–8 weeks
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">1</span> Base-44 → Production Migration</div>
+          <p>Heart Path Bloom moves from a prototyping tool to a production stack you own completely. Scalable, auditable, and ready for real users. Your design and copy come with it — nothing changes except the foundation.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">2</span> Legal & Compliance Layer</div>
+          <p>Privacy policy (COPPA-compliant with parental consent flow for under-13), terms of service, and a safeguarding/mandatory disclosure policy. This isn't paperwork — it's what unlocks school partnerships and grant eligibility.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">3</span> Emotion Vocabulary Expansion</div>
+          <p>Your check-in expands beyond 5 broad moods into nuanced, grief-specific emotion labeling. Teens learn to name what they're actually feeling — not just how intense it is. A clinical differentiator no competitor has built.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">4</span> Crisis Safety Hardening</div>
+          <p>The crisis resources you have are right. Phase 1 adds the infrastructure: escalation logic, trusted adult notification flow, and mandatory disclosure triggers that protect users and the platform legally.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-title">Phase 2 — Growth Layer</div>
+        <div class="phase-meta">
+          <strong>$3,000–$4,000 setup</strong><br>
+          $500/month continues · 6–10 weeks after Phase 1
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">1</span> Therapist Backend</div>
+          <p>The $30/2-week model you've priced is the right model. Phase 2 builds the infrastructure behind it — therapist onboarding, scheduling, session matching, and a provider network. We scope therapist sourcing together as a partnership.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">2</span> Peer & Community Layer</div>
+          <p>Moderated peer groups, anonymous sharing, community affirmations — teens supporting teens through grief. This is the feature that creates long-term retention and the community your original vision described.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">3</span> Guardian Portal</div>
+          <p>Weekly mood trend summaries for parents — no raw journal access, consent-gated. This is what makes Heart Path Bloom sellable to schools and districts. Protects teens, reassures parents, unlocks partnerships.</p>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item-title"><span class="phase-num">4</span> Analytics & Reporting</div>
+          <p>Engagement data, mood trend dashboards, and clinical export formats — the data layer that makes you credible to mental health professionals, grant evaluators, and potential school district buyers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Funding -->
+  <div class="section">
+    <div class="section-label">Funding Strategy</div>
+    <div class="section-title">The build can pay for itself — here's how.</div>
+    <p>We've already researched the grant landscape for Heart Path Bloom. Kendalyn's story sits at the intersection of two of the highest-funded areas right now: <strong>teen mental health</strong> and <strong>gun violence prevention</strong>. That combination is rare. Most applicants have one. You have both — with a working prototype and a survivor-founder origin story. The grants below are real, researched, and matched to where Heart Path Bloom actually is today.</p>
+
+    <div class="funding-items">
+
+      <div class="funding-item">
+        <div class="funding-icon">🤝</div>
+        <div>
+          <div class="funding-title">Start Here — The Dougy Center (Warm Door, Not Cold Pitch)</div>
+          <p class="funding-desc">Heart Path Bloom already cites The Dougy Center as a crisis resource. That makes this a warm introduction, not a cold application. Contact Lani Faith, Director of Campaign Strategy: 503-775-5683. A Dougy Center endorsement multiplies every other grant application. Pursue this first.</p>
+        </div>
+      </div>
+
+      <div class="funding-item">
+        <div class="funding-icon">🎯</div>
+        <div>
+          <div class="funding-title">IFundWomen — Crowdfunding (Recommended Platform)</div>
+          <p class="funding-desc">Not GoFundMe. IFundWomen is built for mission-driven women founders — it includes coaching that raises campaigns 4.5x above the crowdfunding average. A children's grief counseling startup (Guardian Lane) already raised successfully here. Target: $20,000–$30,000. Kendalyn's story will convert. This can cover Phase 1 entirely before a single grant arrives.</p>
+        </div>
+      </div>
+
+      <div class="funding-item">
+        <div class="funding-icon">💼</div>
+        <div>
+          <div class="funding-title">Everytown Survivor Network Grant — $5,000–$20,000 (Rolling Deadline)</div>
+          <p class="funding-desc">Created specifically for organizations providing direct services to people impacted by gun violence. Kendalyn IS the survivor. Heart Path Bloom IS the service. Near-perfect match. Contact: survivornetwork@everytown.org to confirm current cycle and LLC eligibility.</p>
+        </div>
+      </div>
+
+      <div class="funding-item">
+        <div class="funding-icon">🔬</div>
+        <div>
+          <div class="funding-title">NIMH SBIR Phase I — Up to $250,000 (Deadline: Sept 5, 2026)</div>
+          <p class="funding-desc">The National Institute of Mental Health funds digital mental health technologies through their Small Business Innovation Research program. An LLC qualifies as a Small Business Concern — no 501(c)(3) needed. This is the highest-value grant available to Heart Path Bloom right now. Next deadline: September 5, 2026.</p>
+        </div>
+      </div>
+
+      <div class="funding-item">
+        <div class="funding-icon">🏛️</div>
+        <div>
+          <div class="funding-title">Johnson County Community Foundation — Mental Health Grants (Deadline: July 30, 2026)</div>
+          <p class="funding-desc">Indiana-based mental health programming grants with a July 30 deadline — realistic to prepare for now. Requires 501(c)(3) or fiscal sponsor. If Kendalyn's target audience includes Indiana youth, this is a near-term win worth pursuing in parallel with LLC formation.</p>
+        </div>
+      </div>
+
+      <div class="funding-item">
+        <div class="funding-icon">📈</div>
+        <div>
+          <div class="funding-title">On Deck for 2027 — Rare Impact Fund ($250K–$500K) + RWJF ($500K)</div>
+          <p class="funding-desc">The Rare Impact Fund (Selena Gomez) and Robert Wood Johnson Foundation both fund youth mental health and health equity — and both require 501(c)(3) status. Starting the nonprofit track now positions Heart Path Bloom to apply in the next cycle. These are the transformational grants.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Investment -->
+  <div class="section">
+    <div class="section-label">Investment</div>
+    <div class="section-title">The full picture.</div>
+
+    <table class="investment-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Setup</th>
+          <th>Monthly</th>
+          <th>Timeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="phase-name">Phase 1 — Production Foundation</div>
+            Migration, legal layer, emotion tools, crisis hardening
+          </td>
+          <td><div class="price">$3,500</div></td>
+          <td><div class="price">$500</div></td>
+          <td>6–8 weeks</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="phase-name">Phase 2 — Growth Layer</div>
+            Therapist backend, peer layer, guardian portal, analytics
+          </td>
+          <td><div class="price">$3,000–$4,000</div></td>
+          <td><div class="price">$500</div></td>
+          <td>6–10 weeks</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="deposit-note">
+      <strong>To get started:</strong> 50% deposit on Phase 1 — $1,750. The IFundWomen campaign alone can cover this before it's due. The Everytown Survivor Network grant covers Phase 1 in full. NIMH SBIR covers everything and then some. You are not paying for this out of pocket — you are applying for money that already exists for exactly this kind of project. The deposit starts the clock so we're ready when funding lands.
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="section">
+    <div class="section-label">Next Steps</div>
+    <div class="section-title">Simple sequence. Nothing complicated.</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <div class="step-title">Review this proposal together</div>
+          <p class="step-desc">We talk through anything that doesn't feel right. No pressure, no rush. This should feel like a partnership from the first conversation.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <div class="step-title">Service agreement signed</div>
+          <p class="step-desc">Clear scope, timeline, and deliverables — in writing, by both parties.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <div class="step-title">$1,750 deposit — Phase 1 starts</div>
+          <p class="step-desc">50% of the Phase 1 setup fee gets the clock running and the first deliverables queued.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <div class="step-title">Kickoff call</div>
+          <p class="step-desc">Timeline, first deliverable, and funding strategy aligned together. We build the roadmap you can share with funders and partners from day one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="closing">
+    <div class="closing-title">Ready when you are.</div>
+    <div class="closing-text">You built something real out of something painful. That deserves a partner who takes it as seriously as you do. Let's get it to the teens who need it.</div>
+    <div class="contact-row">
+      <a href="mailto:thurrenterprise@gmail.com" class="contact-pill primary">thurrenterprise@gmail.com</a>
+      <span class="contact-pill">Thurr Solutions LLC</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>Heart Path Bloom · Partnership Proposal · April 2026</span>
+    <span>Thurr Solutions LLC · Confidential</span>
+  </div>
+
+</div>
+</body>
+</html>
