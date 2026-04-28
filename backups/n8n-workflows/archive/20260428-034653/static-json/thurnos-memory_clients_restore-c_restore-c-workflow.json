@@ -1,0 +1,142 @@
+{
+  "name": "RESTORE-C Lead Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "restore-c-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Lead Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 340],
+      "webhookId": "restore-c-lead"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'received' }) }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Form",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [460, 180]
+    },
+    {
+      "parameters": {
+        "sendTo": "mlostone@gmail.com",
+        "subject": "=🚨 New Lead: {{ $json.body.firstName }} {{ $json.body.lastName }} — {{ $json.body.damageType }}",
+        "emailType": "text",
+        "message": "=New inspection request received:\n\n---\nNAME:        {{ $json.body.firstName }} {{ $json.body.lastName }}\nPHONE:       {{ $json.body.phone }}\nADDRESS:     {{ $json.body.address }}\nDAMAGE TYPE: {{ $json.body.damageType }}\nNOTES:       {{ $json.body.notes || 'None provided' }}\nSUBMITTED:   {{ $json.body.submittedAt }}\nSOURCE:      {{ $json.body.utm_source || 'Direct' }}\n---\n\nCall or text them within 2 hours to schedule the inspection.\n\nThis lead was automatically captured by your Storm Lead Conversion System.",
+        "options": {}
+      },
+      "id": "gmail-marvin",
+      "name": "Email to Marvin",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [460, 340],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-therrance",
+          "name": "Gmail — Therrance"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.body.submittedAt }}",
+            "First Name": "={{ $json.body.firstName }}",
+            "Last Name": "={{ $json.body.lastName }}",
+            "Phone": "={{ $json.body.phone }}",
+            "Address": "={{ $json.body.address }}",
+            "Damage Type": "={{ $json.body.damageType }}",
+            "Notes": "={{ $json.body.notes || '' }}",
+            "Source": "={{ $json.body.utm_source || 'Direct' }}",
+            "Status": "New"
+          }
+        },
+        "options": {}
+      },
+      "id": "google-sheets-log",
+      "name": "Log Lead to CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [460, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-therrance",
+          "name": "Google Sheets — Therrance"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#restore-c-leads",
+          "mode": "name"
+        },
+        "text": "=🚨 *New Lead — Restore Contracting*\n\n*Name:* {{ $node['Lead Form Webhook'].json.body.firstName }} {{ $node['Lead Form Webhook'].json.body.lastName }}\n*Phone:* {{ $node['Lead Form Webhook'].json.body.phone }}\n*Address:* {{ $node['Lead Form Webhook'].json.body.address }}\n*Damage:* {{ $node['Lead Form Webhook'].json.body.damageType }}\n*Notes:* {{ $node['Lead Form Webhook'].json.body.notes || 'None' }}\n*Source:* {{ $node['Lead Form Webhook'].json.body.utm_source || 'Direct' }}\n\n👉 Call within 2 hours: {{ $node['Lead Form Webhook'].json.body.phone }}",
+        "otherOptions": {}
+      },
+      "id": "slack-alert",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [460, 660],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-therrance",
+          "name": "Slack — Therrance"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Lead Form Webhook": {
+      "main": [
+        [
+          { "node": "Respond to Form", "type": "main", "index": 0 },
+          { "node": "Email to Marvin", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Email to Marvin": {
+      "main": [
+        [{ "node": "Log Lead to CRM", "type": "main", "index": 0 }]
+      ]
+    },
+    "Log Lead to CRM": {
+      "main": [
+        [{ "node": "Slack Alert", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "restore-c-lead-intake"
+  }
+}

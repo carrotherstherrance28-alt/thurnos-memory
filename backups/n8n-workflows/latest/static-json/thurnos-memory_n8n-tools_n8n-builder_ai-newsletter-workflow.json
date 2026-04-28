@@ -1,0 +1,248 @@
+{
+  "name": "Daily AI Newsletter Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-node",
+      "name": "Schedule Trigger - 7 AM Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        250,
+        300
+      ],
+      "notesInFlow": true,
+      "notes": "Triggers daily at 7:00 AM Central Time"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a research assistant for an AI automation agency that builds AI workflows, voice agents, and business automation solutions. Your job is to research the latest developments in AI automation, voice AI, and agentic workflows. Focus on: new AI tools and platforms, voice agent technologies, workflow automation trends, API integrations, and practical business applications. Provide detailed, actionable insights.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Research the latest developments in AI automation and voice agents from the past 24-48 hours. Focus on: 1) New AI automation tools and platforms, 2) Voice agent technologies and improvements, 3) Agentic workflow innovations, 4) Notable API updates or integrations, 5) Practical business use cases. Provide a comprehensive summary with specific examples, links to sources, and key takeaways for an AI automation agency.\"\n    }\n  ],\n  \"max_tokens\": 2000,\n  \"temperature\": 0.7,\n  \"top_p\": 0.9,\n  \"search_domain_filter\": [\"perplexity.ai\"],\n  \"return_images\": false,\n  \"return_related_questions\": false,\n  \"search_recency_filter\": \"day\"\n}",
+        "options": {}
+      },
+      "id": "perplexity-research-node",
+      "name": "Perplexity Research Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexityApiKey",
+          "name": "Perplexity API Key"
+        }
+      },
+      "notesInFlow": true,
+      "notes": "Researches latest AI automation and voice agent news"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://ai-newsletter.automation"
+            },
+            {
+              "name": "X-Title",
+              "value": "AI Newsletter Automation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"anthropic/claude-3.5-sonnet\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an expert newsletter writer and HTML email designer. Create engaging, professional HTML newsletters about AI automation and voice agents. Use modern HTML email best practices with inline CSS. Structure: compelling subject line, engaging header, well-organized content sections with headings, bullet points for key insights, and a professional footer. Make it visually appealing and mobile-responsive.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Based on this research:\\n\\n{{ $json.choices[0].message.content }}\\n\\nCreate a professional HTML newsletter about the latest AI automation and voice agent developments. Include:\\n1. A catchy subject line (output separately as 'subject')\\n2. An engaging introduction\\n3. Main sections covering the key developments\\n4. Actionable insights and takeaways\\n5. Professional styling with inline CSS\\n6. Mobile-responsive design\\n\\nOutput the result as JSON with two fields: 'subject' (string) and 'html' (string containing the full HTML email).\"\n    }\n  ],\n  \"max_tokens\": 4000,\n  \"temperature\": 0.8,\n  \"top_p\": 0.9\n}",
+        "options": {}
+      },
+      "id": "openrouter-writer-node",
+      "name": "OpenRouter Claude Newsletter Writer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        750,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "openRouterApiKey",
+          "name": "OpenRouter API Key"
+        }
+      },
+      "notesInFlow": true,
+      "notes": "Uses Claude 3.5 Sonnet to write HTML newsletter"
+    },
+    {
+      "parameters": {
+        "operation": "parseJson",
+        "jsonString": "={{ $json.choices[0].message.content }}",
+        "options": {}
+      },
+      "id": "parse-json-node",
+      "name": "Parse Newsletter JSON",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1000,
+        300
+      ],
+      "notesInFlow": true,
+      "notes": "Extracts subject and HTML from Claude's response"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "emailType": "html",
+        "toEmail": "ctherrance@gmail.com",
+        "subject": "={{ $json.subject || 'Daily AI Automation & Voice Agent Newsletter - ' + $now.format('MMMM d, yyyy') }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "allowUnauthorizedCerts": false
+        }
+      },
+      "id": "gmail-send-node",
+      "name": "Send Newsletter via Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmailAccount",
+          "name": "Gmail Account"
+        }
+      },
+      "notesInFlow": true,
+      "notes": "Sends HTML newsletter to ctherrance@gmail.com"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "subject-extract",
+              "name": "subject",
+              "value": "={{ $json.choices[0].message.content.match(/\"subject\":\\s*\"([^\"]+)\"/)?.[1] || 'Daily AI Newsletter' }}",
+              "type": "string"
+            },
+            {
+              "id": "html-extract",
+              "name": "html",
+              "value": "={{ $json.choices[0].message.content.match(/\"html\":\\s*\"([\\s\\S]+)\"\\s*}/)?.[1]?.replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"') || $json.choices[0].message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-content-node",
+      "name": "Extract Subject & HTML",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1000,
+        300
+      ],
+      "notesInFlow": true,
+      "notes": "Parses Claude response to extract subject and HTML content"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger - 7 AM Daily": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Research Agent": {
+      "main": [
+        [
+          {
+            "node": "OpenRouter Claude Newsletter Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Claude Newsletter Writer": {
+      "main": [
+        [
+          {
+            "node": "Extract Subject & HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Subject & HTML": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter via Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "",
+    "timezone": "America/Chicago",
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1"
+}

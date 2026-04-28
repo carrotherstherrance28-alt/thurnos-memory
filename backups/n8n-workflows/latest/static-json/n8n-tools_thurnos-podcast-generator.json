@@ -1,0 +1,223 @@
+{
+  "name": "Thurnos Podcast Generator — Discord to Google Drive",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "bot"
+      },
+      "id": "pod-0001-0001-0001-0001-000000000001",
+      "name": "Discord Trigger",
+      "type": "n8n-nodes-base.discordTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.first().json;\nconst content = (msg.content || '').trim();\nconst channelId = msg.channelId || msg.channel_id || '';\n\nif (!content.startsWith('!podcast')) return [];\n\n// Parse: !podcast [topic] for:[client] tone:[solo|interview] length:[short|medium]\nconst text = content.replace('!podcast', '').trim();\n\n// Extract optional flags\nconst forMatch = text.match(/for:([\\w\\s-]+?)(?=tone:|length:|$)/i);\nconst toneMatch = text.match(/tone:(solo|interview)/i);\nconst lengthMatch = text.match(/length:(short|medium)/i);\n\n// Remove flags from topic\nconst topic = text\n  .replace(/for:[\\w\\s-]+/i, '')\n  .replace(/tone:(solo|interview)/i, '')\n  .replace(/length:(short|medium)/i, '')\n  .trim();\n\nconst client = forMatch ? forMatch[1].trim() : 'general';\nconst tone = toneMatch ? toneMatch[1].toLowerCase() : 'solo';\nconst length = lengthMatch ? lengthMatch[1].toLowerCase() : 'short';\n\nconst wordCount = length === 'medium' ? 600 : 300;\n\nreturn [{ json: { topic, client, tone, length, wordCount, channelId } }];"
+      },
+      "id": "pod-0001-0002-0002-0002-000000000002",
+      "name": "Parse Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-opus-4-6\",\n  \"max_tokens\": 1000,\n  \"system\": \"You are the strategic brain for Thurr Solutions. Your job is NOT to write the full script — it is to produce a precise production brief that a faster AI will execute. Be specific, structured, and opinionated.\",\n  \"messages\": [{\n    \"role\": \"user\",\n    \"content\": \"Create a podcast production brief for the following:\\n\\nTopic: {{ $json.topic }}\\nClient/Audience: {{ $json.client }}\\nFormat: {{ $json.tone === 'interview' ? 'Two-speaker interview (Host: Therrance + Expert)' : 'Solo monologue (Therrance speaking directly)' }}\\nLength: {{ $json.length }} (~{{ $json.wordCount }} words)\\n\\nOutput a structured brief with:\\n1. HOOK — exact opening line to grab attention\\n2. KEY POINTS — 3-5 bullet points to cover in order\\n3. TONE NOTES — how to sound (confident, casual, urgent, etc.)\\n4. CTA — exact call to action at the end\\n5. AVOID — what NOT to say\\n\\nBe specific. This brief goes directly to a production model.\"\n  }]\n}"
+      },
+      "id": "pod-0001-0003-0003-0003-000000000003",
+      "name": "Opus — Plan Brief",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Thurnos Paperclip"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst parsed = $('Parse Command').item.json;\nconst brief = response.content?.[0]?.text || '';\n\nreturn [{\n  json: {\n    brief,\n    topic: parsed.topic,\n    client: parsed.client,\n    tone: parsed.tone,\n    wordCount: parsed.wordCount,\n    channelId: parsed.channelId\n  }\n}];"
+      },
+      "id": "pod-0001-0003b-0003b-0003b-00000000003b",
+      "name": "Extract Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"max_tokens\": 2000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a podcast script writer for Thurr Solutions, an AI automation agency run by Therrance. Write exactly what will be spoken — no stage directions, no brackets, no meta-commentary. Sound like a sharp, confident expert talking to a friend.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Using this production brief, write the full {{ $json.tone === 'interview' ? 'two-speaker interview' : 'solo monologue' }} podcast script (~{{ $json.wordCount }} words).\\n\\nPRODUCTION BRIEF:\\n{{ $json.brief }}\\n\\nFormat: {{ $json.tone === 'interview' ? 'Label each line as HOST: or EXPERT: ' : 'Write as continuous speech for Therrance' }}\\nStart immediately with the hook. End with the CTA.\"\n    }\n  ]\n}"
+      },
+      "id": "pod-0001-0003c-0003c-0003c-00000000003c",
+      "name": "GPT-4o Mini — Write Script",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Thurnos GPT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst briefData = $('Extract Brief').item.json;\n\n// Extract text from GPT-4o mini response\nconst script = response.choices?.[0]?.message?.content || '';\n\n// Clean for TTS — strip speaker labels and stage directions\nconst ttsScript = script\n  .replace(/\\[.*?\\]/g, '')\n  .replace(/\\*.*?\\*/g, '')\n  .replace(/^(HOST|EXPERT|THERRANCE):\\s*/gim, '')\n  .replace(/\\n{3,}/g, '\\n\\n')\n  .trim();\n\nreturn [{\n  json: {\n    script,\n    ttsScript,\n    topic: briefData.topic,\n    client: briefData.client,\n    tone: briefData.tone,\n    channelId: briefData.channelId,\n    filename: `thurnos-podcast-${briefData.topic.toLowerCase().replace(/\\s+/g, '-').slice(0,40)}-${Date.now()}.mp3`\n  }\n}];"
+      },
+      "id": "pod-0001-0004-0004-0004-000000000004",
+      "name": "Extract Script",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "xi-api-key", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"{{ $json.ttsScript }}\",\n  \"model_id\": \"eleven_turbo_v2_5\",\n  \"voice_settings\": {\n    \"stability\": 0.5,\n    \"similarity_boost\": 0.75,\n    \"style\": 0.3,\n    \"use_speaker_boost\": true\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "pod-0001-0005-0005-0005-000000000005",
+      "name": "ElevenLabs TTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Thurnos Voice"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "name": "={{ $('Extract Script').item.json.filename }}",
+        "driveId": { "__rl": true, "value": "MyDrive", "mode": "list" },
+        "folderId": { "__rl": true, "value": "root", "mode": "list" },
+        "options": {
+          "convertToGoogleDocument": false
+        }
+      },
+      "id": "pod-0001-0006-0006-0006-000000000006",
+      "name": "Upload to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1340, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const driveFile = $input.first().json;\nconst scriptData = $('Extract Script').item.json;\n\nconst fileId = driveFile.id || driveFile.fileId || '';\nconst fileName = driveFile.name || scriptData.filename;\nconst driveLink = fileId ? `https://drive.google.com/file/d/${fileId}/view` : 'Check Google Drive';\n\nreturn [{\n  json: {\n    channelId: scriptData.channelId,\n    message: `🎙️ **Podcast Ready**\\n📌 Topic: ${scriptData.topic}\\n👤 Client: ${scriptData.client}\\n🔗 ${driveLink}\\n\\n📄 Script Preview:\\n${scriptData.script.slice(0, 300)}...`\n  }\n}];"
+      },
+      "id": "pod-0001-0007-0007-0007-000000000007",
+      "name": "Format Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": { "__rl": true, "value": "={{ $json.channelId }}", "mode": "id" },
+        "content": "={{ $json.message }}"
+      },
+      "id": "pod-0001-0008-0008-0008-000000000008",
+      "name": "Send to Discord",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1780, 300],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Discord Trigger": {
+      "main": [[{ "node": "Parse Command", "type": "main", "index": 0 }]]
+    },
+    "Parse Command": {
+      "main": [[{ "node": "Generate Script", "type": "main", "index": 0 }]]
+    },
+    "Opus — Plan Brief": {
+      "main": [[{ "node": "Extract Brief", "type": "main", "index": 0 }]]
+    },
+    "Extract Brief": {
+      "main": [[{ "node": "GPT-4o Mini — Write Script", "type": "main", "index": 0 }]]
+    },
+    "GPT-4o Mini — Write Script": {
+      "main": [[{ "node": "Extract Script", "type": "main", "index": 0 }]]
+    },
+    "Extract Script": {
+      "main": [[{ "node": "ElevenLabs TTS", "type": "main", "index": 0 }]]
+    },
+    "ElevenLabs TTS": {
+      "main": [[{ "node": "Upload to Google Drive", "type": "main", "index": 0 }]]
+    },
+    "Upload to Google Drive": {
+      "main": [[{ "node": "Format Reply", "type": "main", "index": 0 }]]
+    },
+    "Format Reply": {
+      "main": [[{ "node": "Send to Discord", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["thurnos", "podcast", "elevenlabs", "google-drive", "discord"]
+}

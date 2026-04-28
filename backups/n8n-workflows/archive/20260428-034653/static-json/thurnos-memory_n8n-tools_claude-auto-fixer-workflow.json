@@ -1,0 +1,47 @@
+{
+  "name": "Claude Code Auto-Fixer",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-trigger-1",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jasiah-superable-nonregeneratively.ngrok-free.dev/fix-workflow",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\"workflowId\": $json.workflow.id, \"workflowName\": $json.workflow.name, \"errorMessage\": $json.execution.error.message} }}"
+      },
+      "id": "http-request-1",
+      "name": "Call Claude Code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Call Claude Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0
+}

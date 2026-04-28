@@ -1,0 +1,379 @@
+{
+  "name": "Thurnos ↔ Paperclip Bridge",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "bot"
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Discord Trigger",
+      "type": "n8n-nodes-base.discordTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.first().json;\nconst content = (msg.content || '').trim();\nconst channelId = msg.channelId || msg.channel_id || '';\nconst authorName = msg.author?.username || 'Therrance';\n\n// Ignore messages that don't start with !\nif (!content.startsWith('!')) return [];\n\nconst parts = content.slice(1).split(' ');\nconst command = parts[0].toLowerCase();\nconst text = parts.slice(1).join(' ').trim();\n\nreturn [{ json: { command, text, channelId, authorName, rawContent: content } }];"
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Parse Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "task",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "task"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "status",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "status"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "agents",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "agents"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "help",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Route Command",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $vars.PAPERCLIP_URL }}/api/companies/1db975fb-0004-4954-9015-d78d57cd2762/issues",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ $('Parse Command').item.json.text }}\",\n  \"projectId\": \"da223b86-bcd1-4675-b169-428d37fdf1c3\",\n  \"priority\": \"medium\",\n  \"status\": \"todo\"\n}"
+      },
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Create Issue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "const issue = $input.first().json;\nconst cmd = $('Parse Command').item.json;\nreturn [{\n  json: {\n    channelId: cmd.channelId,\n    message: `✅ **Task created** → \\`${issue.issuePrefix || 'THU'}-${issue.issueNumber || '?'}\\`\\n📋 **${issue.title}**\\nStatus: todo | Priority: medium`\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "Format Task Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 100]
+    },
+    {
+      "parameters": {
+        "url": "={{ $vars.PAPERCLIP_URL }}/api/companies/1db975fb-0004-4954-9015-d78d57cd2762/issues?status=todo,in_progress&limit=10",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0006-0006-0006-000000000006",
+      "name": "Get Issues",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst cmd = $('Parse Command').item.json;\nconst issues = Array.isArray(data) ? data : (data.issues || data.data || []);\n\nif (!issues.length) {\n  return [{ json: { channelId: cmd.channelId, message: '📭 No open tasks right now.' } }];\n}\n\nconst lines = issues.slice(0, 8).map(i => {\n  const badge = i.status === 'in_progress' ? '🔄' : '📋';\n  const pri = i.priority === 'critical' ? '🔴' : i.priority === 'high' ? '🟠' : '🟡';\n  return `${badge}${pri} **${i.title}** | ${i.status}`;\n}).join('\\n');\n\nreturn [{ json: { channelId: cmd.channelId, message: `**Open Tasks (${issues.length})**\\n${lines}` } }];"
+      },
+      "id": "a1b2c3d4-0007-0007-0007-000000000007",
+      "name": "Format Status Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 280]
+    },
+    {
+      "parameters": {
+        "url": "={{ $vars.PAPERCLIP_URL }}/api/companies/1db975fb-0004-4954-9015-d78d57cd2762/agents",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0008-0008-0008-000000000008",
+      "name": "Get Agents",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 460]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst cmd = $('Parse Command').item.json;\nconst agents = Array.isArray(data) ? data : (data.agents || []);\n\nconst statusEmoji = { idle: '🟢', active: '⚡', busy: '🔄', pending_approval: '⏳', paused: '⏸️' };\n\nconst lines = agents.map(a => {\n  const e = statusEmoji[a.status] || '❓';\n  return `${e} **${a.name}** (${a.role}) — ${a.status}`;\n}).join('\\n');\n\nreturn [{ json: { channelId: cmd.channelId, message: `**Thurnos Agents**\\n${lines}` } }];"
+      },
+      "id": "a1b2c3d4-0009-0009-0009-000000000009",
+      "name": "Format Agents Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 460]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmd = $input.first().json;\nreturn [{\n  json: {\n    channelId: cmd.channelId,\n    message: '**Thurnos Commands**\\n`!task [description]` — create a task for the agents\\n`!status` — show open tasks\\n`!agents` — show agent status\\n`!help` — this menu'\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0010-0010-0010-000000000010",
+      "name": "Format Help Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 640]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmd = $input.first().json;\nreturn [{\n  json: {\n    channelId: cmd.channelId,\n    message: `❓ Unknown command \\`!${cmd.command}\\`. Try \\`!help\\`.`\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0011-0011-0011-000000000011",
+      "name": "Format Unknown Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 800]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.channelId }}",
+          "mode": "id"
+        },
+        "content": "={{ $json.message }}"
+      },
+      "id": "a1b2c3d4-0012-0012-0012-000000000012",
+      "name": "Reply to Discord",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1380, 100],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.channelId }}",
+          "mode": "id"
+        },
+        "content": "={{ $json.message }}"
+      },
+      "id": "a1b2c3d4-0013-0013-0013-000000000013",
+      "name": "Reply Status",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1380, 280],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.channelId }}",
+          "mode": "id"
+        },
+        "content": "={{ $json.message }}"
+      },
+      "id": "a1b2c3d4-0014-0014-0014-000000000014",
+      "name": "Reply Agents",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1380, 460],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.channelId }}",
+          "mode": "id"
+        },
+        "content": "={{ $json.message }}"
+      },
+      "id": "a1b2c3d4-0015-0015-0015-000000000015",
+      "name": "Reply Help",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1380, 640],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.channelId }}",
+          "mode": "id"
+        },
+        "content": "={{ $json.message }}"
+      },
+      "id": "a1b2c3d4-0016-0016-0016-000000000016",
+      "name": "Reply Unknown",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1380, 800],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Discord Trigger": {
+      "main": [
+        [{ "node": "Parse Command", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Command": {
+      "main": [
+        [{ "node": "Route Command", "type": "main", "index": 0 }]
+      ]
+    },
+    "Route Command": {
+      "main": [
+        [{ "node": "Create Issue", "type": "main", "index": 0 }],
+        [{ "node": "Get Issues", "type": "main", "index": 0 }],
+        [{ "node": "Get Agents", "type": "main", "index": 0 }],
+        [{ "node": "Format Help Reply", "type": "main", "index": 0 }],
+        [{ "node": "Format Unknown Reply", "type": "main", "index": 0 }]
+      ]
+    },
+    "Create Issue": {
+      "main": [
+        [{ "node": "Format Task Reply", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Task Reply": {
+      "main": [
+        [{ "node": "Reply to Discord", "type": "main", "index": 0 }]
+      ]
+    },
+    "Get Issues": {
+      "main": [
+        [{ "node": "Format Status Reply", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Status Reply": {
+      "main": [
+        [{ "node": "Reply Status", "type": "main", "index": 0 }]
+      ]
+    },
+    "Get Agents": {
+      "main": [
+        [{ "node": "Format Agents Reply", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Agents Reply": {
+      "main": [
+        [{ "node": "Reply Agents", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Help Reply": {
+      "main": [
+        [{ "node": "Reply Help", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Unknown Reply": {
+      "main": [
+        [{ "node": "Reply Unknown", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["thurnos", "paperclip", "discord"],
+  "triggerCount": 1,
+  "variables": {
+    "PAPERCLIP_URL": "https://YOUR-TUNNEL.trycloudflare.com"
+  }
+}

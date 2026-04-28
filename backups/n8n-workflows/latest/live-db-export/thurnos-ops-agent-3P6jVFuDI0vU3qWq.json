@@ -1,0 +1,15 @@
+{
+  "id": "3P6jVFuDI0vU3qWq",
+  "name": "Thurnos Ops Agent",
+  "active": 1,
+  "nodes": "[{\"parameters\":{\"httpMethod\":\"POST\",\"path\":\"thurnos-ops\",\"responseMode\":\"responseNode\"},\"name\":\"Webhook\",\"type\":\"n8n-nodes-base.webhook\",\"typeVersion\":2,\"position\":[250,300],\"id\":\"e7683e03-8d87-45f3-ba34-377b26b2f160\",\"webhookId\":\"6e06f658-accd-445a-82b3-36d634c2bdbd\"},{\"parameters\":{\"rules\":{\"values\":[{\"outputIndex\":0,\"conditions\":{\"conditions\":[{\"leftValue\":\"={{ $json.body.tool }}\",\"rightValue\":\"shell\",\"operator\":{\"type\":\"string\",\"operation\":\"equals\"}}]}},{\"outputIndex\":1,\"conditions\":{\"conditions\":[{\"leftValue\":\"={{ $json.body.tool }}\",\"rightValue\":\"web_search\",\"operator\":{\"type\":\"string\",\"operation\":\"equals\"}}]}}]},\"options\":{}},\"name\":\"Route by Tool\",\"type\":\"n8n-nodes-base.switch\",\"typeVersion\":3,\"position\":[470,300],\"id\":\"cd6a09ef-6670-4f24-8dcb-69a3297852bc\"},{\"parameters\":{\"jsCode\":\"const { execSync } = require('child_process');\\nconst cmd = $input.first().json.body.command;\\nconst output = execSync(cmd, {timeout: 30000}).toString();\\nreturn [{json: {stdout: output}}];\"},\"name\":\"Run Command\",\"type\":\"n8n-nodes-base.code\",\"typeVersion\":2,\"position\":[700,200],\"id\":\"11c52982-e465-454c-921c-1b51f53ae141\"},{\"parameters\":{\"url\":\"=https://www.googleapis.com/customsearch/v1?q={{ encodeURIComponent($json.body.query) }}&key=YOUR_GOOGLE_API_KEY&cx=YOUR_SEARCH_ENGINE_ID\",\"options\":{}},\"name\":\"Web Search\",\"type\":\"n8n-nodes-base.httpRequest\",\"typeVersion\":4.2,\"position\":[700,400],\"id\":\"42f1cb65-ad28-401a-84bf-c45ea17cd0f5\"},{\"parameters\":{\"options\":{\"responseBody\":\"={{ JSON.stringify($json) }}\"}},\"name\":\"Respond Shell\",\"type\":\"n8n-nodes-base.respondToWebhook\",\"typeVersion\":1.1,\"position\":[920,200],\"id\":\"c9397909-84ee-48d4-83b0-10760e2191f4\"},{\"parameters\":{\"options\":{\"responseBody\":\"={{ JSON.stringify($json) }}\"}},\"name\":\"Respond Search\",\"type\":\"n8n-nodes-base.respondToWebhook\",\"typeVersion\":1.1,\"position\":[920,400],\"id\":\"9cdf6fea-eb24-46d0-b532-61c60a69154e\"}]",
+  "connections": "{\"Webhook\":{\"main\":[[{\"node\":\"Route by Tool\",\"type\":\"main\",\"index\":0}]]},\"Route by Tool\":{\"main\":[[{\"node\":\"Run Command\",\"type\":\"main\",\"index\":0}],[{\"node\":\"Web Search\",\"type\":\"main\",\"index\":0}]]},\"Run Command\":{\"main\":[[{\"node\":\"Respond Shell\",\"type\":\"main\",\"index\":0}]]},\"Web Search\":{\"main\":[[{\"node\":\"Respond Search\",\"type\":\"main\",\"index\":0}]]}}",
+  "settings": "{\"callerPolicy\":\"workflowsFromSameOwner\",\"availableInMCP\":false}",
+  "staticData": null,
+  "pinData": null,
+  "createdAt": "2026-04-24 01:22:56.686",
+  "updatedAt": "2026-04-24 01:28:01.617",
+  "versionId": "c0c67e5d-aa10-4b12-b234-446936271eda",
+  "versionCounter": 4,
+  "description": null
+}

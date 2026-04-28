@@ -1,0 +1,15 @@
+{
+  "id": "Sa9d6DqSM5GseGqL",
+  "name": "My workflow",
+  "active": 0,
+  "nodes": "[{\"parameters\":{},\"type\":\"n8n-nodes-base.manualTrigger\",\"typeVersion\":1,\"position\":[0,0],\"id\":\"b8c5105b-7bac-429e-8619-54d7ae0414d8\",\"name\":\"When clicking ‘Execute workflow’\"},{\"parameters\":{\"resource\":\"message\",\"guildId\":{\"__rl\":true,\"value\":\"1490820087522000896\",\"mode\":\"list\",\"cachedResultName\":\"Thurr Solutions Ops\",\"cachedResultUrl\":\"https://discord.com/channels/1490820087522000896\"},\"channelId\":{\"__rl\":true,\"value\":\"1490821698549710898\",\"mode\":\"list\",\"cachedResultName\":\"lead-alerts\",\"cachedResultUrl\":\"https://discord.com/channels/1490820087522000896/1490821698549710898\"},\"content\":\"=🔔 New Lead - Restore Contracting\\n\\nName: {{ $json.name }}\\nPhone: {{ $json.phone }}\\nMessage: {{ $json.message }}\\nTime: {{ $now.toFormat('MM/dd/yyyy hh:mm a') }}\\n\\nAction Required: Follow up within 15 minutes\",\"options\":{}},\"type\":\"n8n-nodes-base.discord\",\"typeVersion\":2,\"position\":[208,0],\"id\":\"7f8eb19d-3a6f-4298-9145-42e15a9d2946\",\"name\":\"Send a message\",\"webhookId\":\"ef0bdc42-0ce1-4d36-931b-18e4294d1298\",\"credentials\":{\"discordBotApi\":{\"id\":\"aIW0HSX4Bt4J0Fan\",\"name\":\"Thurnos Discord\"}}}]",
+  "connections": "{\"When clicking ‘Execute workflow’\":{\"main\":[[{\"node\":\"Send a message\",\"type\":\"main\",\"index\":0}]]}}",
+  "settings": "{\"executionOrder\":\"v1\",\"binaryMode\":\"separate\",\"availableInMCP\":false}",
+  "staticData": null,
+  "pinData": "{}",
+  "createdAt": "2026-04-06 22:28:59.965",
+  "updatedAt": "2026-04-06 23:56:13.124",
+  "versionId": "bc80089a-0398-4e40-ba2f-a4a63e1220a9",
+  "versionCounter": 9,
+  "description": null
+}

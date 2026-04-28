@@ -1,0 +1,15 @@
+{
+  "id": "inCmWOmy0ZvUiGzJ",
+  "name": "Thurnos Nightly Memory Push",
+  "active": 1,
+  "nodes": "[{\"id\":\"sched-001\",\"name\":\"Schedule Trigger\",\"type\":\"n8n-nodes-base.scheduleTrigger\",\"position\":[250,300],\"typeVersion\":1.2,\"parameters\":{\"rule\":{\"interval\":[{\"field\":\"cronExpression\",\"expression\":\"0 0 * * *\"}]}}},{\"id\":\"exec-001\",\"name\":\"Git Push Memory\",\"type\":\"n8n-nodes-base.code\",\"position\":[500,300],\"typeVersion\":2,\"parameters\":{\"jsCode\":\"const { execSync } = require('child_process');\\nconst repoPath = require('os').homedir() + '/Documents/ThurrSolutions/Thurnos';\\nconst now = new Date().toISOString().split('T')[0];\\ntry {\\n  execSync('cd ' + repoPath + ' && git add memory/ && git commit -m \\\"Nightly memory push ' + now + '\\\" --allow-empty && git push', {timeout: 30000});\\n  return [{json: {status: 'pushed', date: now}}];\\n} catch(e) {\\n  return [{json: {status: 'error', msg: e.message.substring(0, 200)}}];\\n}\"}}]",
+  "connections": "{\"Schedule Trigger\":{\"main\":[[{\"node\":\"Git Push Memory\",\"type\":\"main\",\"index\":0}]]}}",
+  "settings": "{\"executionOrder\":\"v1\",\"callerPolicy\":\"workflowsFromSameOwner\",\"availableInMCP\":false}",
+  "staticData": "{\"node:Schedule Trigger\":{\"recurrenceRules\":[]}}",
+  "pinData": "{}",
+  "createdAt": "2026-04-22 19:51:10.234",
+  "updatedAt": "2026-04-23 23:11:18.633",
+  "versionId": "abe0af35-1232-4ac5-beeb-8be9b04fba81",
+  "versionCounter": 5,
+  "description": null
+}

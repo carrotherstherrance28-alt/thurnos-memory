@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-04-28T08:46:53Z",
+  "sourceDatabase": "/Users/thurr/.n8n/database.sqlite",
+  "workflowCount": 4,
+  "staticJsonCount": 9,
+  "credentialsBackedUp": false,
+  "notes": [
+    "Exports workflow definitions from workflow_entity only.",
+    "Credential tables and credential-looking files are intentionally excluded.",
+    "Use n8n's official CLI export when Node is upgraded to a supported n8n runtime."
+  ]
+}
