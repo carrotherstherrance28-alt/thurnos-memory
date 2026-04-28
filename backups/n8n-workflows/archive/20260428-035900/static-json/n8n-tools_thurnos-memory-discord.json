@@ -1,0 +1,428 @@
+{
+  "name": "Thurnos Memory — Discord !remember !recall !forget",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "bot"
+      },
+      "id": "m0000001-0001-0001-0001-000000000001",
+      "name": "Discord Trigger",
+      "type": "n8n-nodes-base.discordTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "discordBotApi": {
+          "id": "",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.first().json;\nconst content = (msg.content || '').trim();\nconst channelId = msg.channelId || msg.channel_id || '';\n\nif (!content.startsWith('!')) return [];\n\nconst parts = content.slice(1).split(' ');\nconst command = parts[0].toLowerCase();\n\nlet key = '';\nlet value = '';\nlet client = '';\nlet category = 'general';\n\nif (command === 'remember') {\n  // !remember [key] [value]\n  key = parts[1] || '';\n  value = parts.slice(2).join(' ');\n} else if (command === 'recall') {\n  // !recall [key]\n  key = parts[1] || '';\n} else if (command === 'forget') {\n  // !forget [key]\n  key = parts[1] || '';\n}\n\nreturn [{ json: { command, key, value, client, category, channelId, raw: content } }];"
+      },
+      "id": "m0000001-0002-0002-0002-000000000002",
+      "name": "Parse Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "remember",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "remember"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "recall",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "recall"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "forget",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "forget"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "m0000001-0003-0003-0003-000000000003",
+      "name": "Route Command",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "filterByFormula": "={key}='{{ $('Parse Command').item.json.key }}'",
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "m0000001-0004-0004-0004-000000000004",
+      "name": "Search Existing Key",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [920, 100],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = $input.all();\nconst cmd = $('Parse Command').item.json;\nconst existing = results[0]?.json;\n\nreturn [{\n  json: {\n    exists: !!(existing && existing.id),\n    recordId: existing?.id || null,\n    key: cmd.key,\n    value: cmd.value,\n    client: cmd.client,\n    category: cmd.category,\n    channelId: cmd.channelId\n  }\n}];"
+      },
+      "id": "m0000001-0005-0005-0005-000000000005",
+      "name": "Check Exists",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $json.exists }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equals" }
+            }
+          ]
+        }
+      },
+      "id": "m0000001-0006-0006-0006-000000000006",
+      "name": "Exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1360, 100]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "id": "={{ $json.recordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "value": "={{ $json.value }}",
+            "set_by": "thurnos",
+            "updated_at": "={{ new Date().toISOString().split('T')[0] }}"
+          }
+        }
+      },
+      "id": "m0000001-0007-0007-0007-000000000007",
+      "name": "Update Record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1580, 40],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "key": "={{ $json.key }}",
+            "value": "={{ $json.value }}",
+            "client": "={{ $json.client }}",
+            "category": "={{ $json.category }}",
+            "set_by": "thurnos",
+            "updated_at": "={{ new Date().toISOString().split('T')[0] }}"
+          }
+        }
+      },
+      "id": "m0000001-0008-0008-0008-000000000008",
+      "name": "Create Record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1580, 160],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmd = $('Parse Command').item.json;\nreturn [{ json: { channelId: cmd.channelId, message: `✅ Remembered: \\`${cmd.key}\\`` } }];"
+      },
+      "id": "m0000001-0009-0009-0009-000000000009",
+      "name": "Remember Confirm",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1800, 100]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "filterByFormula": "={key}='{{ $('Parse Command').item.json.key }}'",
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "m0000001-0010-0010-0010-000000000010",
+      "name": "Fetch Memory",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [920, 300],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = $input.all();\nconst cmd = $('Parse Command').item.json;\nconst record = results[0]?.json?.fields || results[0]?.json;\n\nif (!record || !record.value) {\n  return [{ json: { channelId: cmd.channelId, message: `❓ Nothing stored for \\`${cmd.key}\\`` } }];\n}\n\nreturn [{ json: { channelId: cmd.channelId, message: `🧠 **${cmd.key}**\\n${record.value}` } }];"
+      },
+      "id": "m0000001-0011-0011-0011-000000000011",
+      "name": "Format Recall",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 300]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "filterByFormula": "={key}='{{ $('Parse Command').item.json.key }}'",
+        "returnAll": false,
+        "limit": 1
+      },
+      "id": "m0000001-0012-0012-0012-000000000012",
+      "name": "Find To Delete",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [920, 500],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "base": {
+          "__rl": true,
+          "value": "appIgQD07GgesRJYZ",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Table 1",
+          "mode": "name"
+        },
+        "id": "={{ $json.id }}"
+      },
+      "id": "m0000001-0013-0013-0013-000000000013",
+      "name": "Delete Record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1140, 500],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "",
+          "name": "Thurnos Airtable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const cmd = $('Parse Command').item.json;\nreturn [{ json: { channelId: cmd.channelId, message: `🗑️ Forgot: \\`${cmd.key}\\`` } }];"
+      },
+      "id": "m0000001-0014-0014-0014-000000000014",
+      "name": "Forget Confirm",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1360, 500]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": { "__rl": true, "value": "={{ $json.channelId }}", "mode": "id" },
+        "content": "={{ $json.message }}"
+      },
+      "id": "m0000001-0015-0015-0015-000000000015",
+      "name": "Send Remember Reply",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [2020, 100],
+      "credentials": {
+        "discordBotApi": { "id": "", "name": "Thurnos Prime Bot" }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": { "__rl": true, "value": "={{ $json.channelId }}", "mode": "id" },
+        "content": "={{ $json.message }}"
+      },
+      "id": "m0000001-0016-0016-0016-000000000016",
+      "name": "Send Recall Reply",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1360, 300],
+      "credentials": {
+        "discordBotApi": { "id": "", "name": "Thurnos Prime Bot" }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channelId": { "__rl": true, "value": "={{ $json.channelId }}", "mode": "id" },
+        "content": "={{ $json.message }}"
+      },
+      "id": "m0000001-0017-0017-0017-000000000017",
+      "name": "Send Forget Reply",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [1580, 500],
+      "credentials": {
+        "discordBotApi": { "id": "", "name": "Thurnos Prime Bot" }
+      }
+    }
+  ],
+  "connections": {
+    "Discord Trigger": {
+      "main": [[{ "node": "Parse Command", "type": "main", "index": 0 }]]
+    },
+    "Parse Command": {
+      "main": [[{ "node": "Route Command", "type": "main", "index": 0 }]]
+    },
+    "Route Command": {
+      "main": [
+        [{ "node": "Search Existing Key", "type": "main", "index": 0 }],
+        [{ "node": "Fetch Memory", "type": "main", "index": 0 }],
+        [{ "node": "Find To Delete", "type": "main", "index": 0 }]
+      ]
+    },
+    "Search Existing Key": {
+      "main": [[{ "node": "Check Exists", "type": "main", "index": 0 }]]
+    },
+    "Check Exists": {
+      "main": [[{ "node": "Exists?", "type": "main", "index": 0 }]]
+    },
+    "Exists?": {
+      "main": [
+        [{ "node": "Update Record", "type": "main", "index": 0 }],
+        [{ "node": "Create Record", "type": "main", "index": 0 }]
+      ]
+    },
+    "Update Record": {
+      "main": [[{ "node": "Remember Confirm", "type": "main", "index": 0 }]]
+    },
+    "Create Record": {
+      "main": [[{ "node": "Remember Confirm", "type": "main", "index": 0 }]]
+    },
+    "Remember Confirm": {
+      "main": [[{ "node": "Send Remember Reply", "type": "main", "index": 0 }]]
+    },
+    "Fetch Memory": {
+      "main": [[{ "node": "Format Recall", "type": "main", "index": 0 }]]
+    },
+    "Format Recall": {
+      "main": [[{ "node": "Send Recall Reply", "type": "main", "index": 0 }]]
+    },
+    "Find To Delete": {
+      "main": [[{ "node": "Delete Record", "type": "main", "index": 0 }]]
+    },
+    "Delete Record": {
+      "main": [[{ "node": "Forget Confirm", "type": "main", "index": 0 }]]
+    },
+    "Forget Confirm": {
+      "main": [[{ "node": "Send Forget Reply", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["thurnos", "memory", "discord", "airtable"]
+}

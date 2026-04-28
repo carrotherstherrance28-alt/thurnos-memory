@@ -1,0 +1,122 @@
+{
+  "name": "Thurnos Prime — Conversational Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "event": "messageCreate",
+        "filters": {}
+      },
+      "id": "00000000-0000-0000-0000-000000000101",
+      "name": "Discord Trigger",
+      "type": "n8n-nodes-base.discordTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "discordBotApi": {
+          "id": "2",
+          "name": "Thurnos Prime Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.first().json;\n\n// Ignore messages from bots (prevent infinite loops)\nif (msg.author && msg.author.bot) {\n  return [];\n}\n\n// Only respond if message has content\nif (!msg.content || msg.content.trim() === '') {\n  return [];\n}\n\nconst channelId = msg.channelId || msg.channel_id;\nconst content   = msg.content.trim();\nconst username  = msg.author?.username || 'Therrance';\n\nconst claudePayload = {\n  model: 'claude-haiku-4-5-20251001',\n  max_tokens: 1024,\n  system: `You are Thurnos Prime — the AI operating brain of Thurr Solutions, owned by Therrance Carrothers. You are running on Therrance's private Mac Mini.\\n\\nYour role: Help Therrance manage his automation agency, n8n workflows, clients, finances, and daily operations. You are sharp, direct, and practical. You remember context across the conversation.\\n\\nKey context:\\n- Therrance runs Thurr Solutions (automation agency) and is an intern at Maximax Automation Agency\\n- Active client: RESTORE-C (Weather Stopper roofing contractor)\\n- n8n Cloud instance: therrancecarrothers.app.n8n.cloud\\n- Lead Qualification workflow ID: qG6B8b5kwP5zmJKm\\n- Sales Proposal workflow ID: Iar5xzG6KaCj8Gy2\\n- API optimization priority: batch calls, pre-filter before LLM steps, use cheapest capable model\\n\\nRules:\\n- Never send information out or make purchases without explicit consent\\n- Be concise on Discord — use bullet points and short paragraphs\\n- If asked to build something, give the plan first before executing`,\n  messages: [\n    {\n      role: 'user',\n      content: content\n    }\n  ]\n};\n\nreturn [{\n  json: {\n    channelId,\n    username,\n    claudePayload: JSON.stringify(claudePayload)\n  }\n}];"
+      },
+      "id": "00000000-0000-0000-0000-000000000102",
+      "name": "Filter & Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.claudePayload }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Anthropic API"
+        }
+      },
+      "id": "00000000-0000-0000-0000-000000000103",
+      "name": "Claude API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst channelId = $('Filter & Prepare').first().json.channelId;\n\n// Extract text from Claude response\nconst text = response.content?.[0]?.text || 'Sorry, I had trouble generating a response.';\n\n// Discord message limit is 2000 chars — split if needed\nconst chunks = [];\nif (text.length <= 1900) {\n  chunks.push(text);\n} else {\n  // Split on paragraph breaks to keep responses readable\n  const paragraphs = text.split('\\n\\n');\n  let current = '';\n  for (const p of paragraphs) {\n    if ((current + '\\n\\n' + p).length > 1900) {\n      if (current) chunks.push(current.trim());\n      current = p;\n    } else {\n      current = current ? current + '\\n\\n' + p : p;\n    }\n  }\n  if (current) chunks.push(current.trim());\n}\n\nreturn chunks.map(chunk => ({\n  json: {\n    channelId,\n    payload: JSON.stringify({ content: chunk })\n  }\n}));"
+      },
+      "id": "00000000-0000-0000-0000-000000000104",
+      "name": "Extract Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://discord.com/api/v10/channels/{{ $json.channelId }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.payload }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Thurnos Prime Bot"
+        }
+      },
+      "id": "00000000-0000-0000-0000-000000000105",
+      "name": "Discord: Send Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1200, 300]
+    }
+  ],
+  "connections": {
+    "Discord Trigger": {
+      "main": [[{ "node": "Filter & Prepare", "type": "main", "index": 0 }]]
+    },
+    "Filter & Prepare": {
+      "main": [[{ "node": "Claude API", "type": "main", "index": 0 }]]
+    },
+    "Claude API": {
+      "main": [[{ "node": "Extract Response", "type": "main", "index": 0 }]]
+    },
+    "Extract Response": {
+      "main": [[{ "node": "Discord: Send Reply", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  }
+}
